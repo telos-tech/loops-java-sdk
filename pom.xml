@@ -9,7 +9,7 @@
 
     <name>Loops Java SDK</name>
     <description>Java SDK for Loops.so (events + transactional, sync + async)</description>
-    <url>https://github.com/telosnath/loops-java-sdk</url>
+    <url>https://github.com/telos-tech/loops-java-sdk</url>
 
     <licenses>
         <license>
@@ -21,16 +21,16 @@
 
     <developers>
         <developer>
-            <id>telosnath</id>
+            <id>telos</id>
             <name>Telos Development</name>
-            <email>dev@telos.com</email>
+            <email>admin@telos-technologies.com</email>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/telosnath/loops-java-sdk.git</connection>
-        <developerConnection>scm:git:ssh://github.com:telosnath/loops-java-sdk.git</developerConnection>
-        <url>https://github.com/telosnath/loops-java-sdk/tree/main</url>
+        <connection>scm:git:git://github.com/telos-tech/loops-java-sdk.git</connection>
+        <developerConnection>scm:git:ssh://github.com:telos-tech/loops-java-sdk.git</developerConnection>
+        <url>https://github.com/telos-tech/loops-java-sdk/tree/main</url>
     </scm>
 
     <properties>
