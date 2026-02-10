@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asynchronous Operations - Loops Java SDK</title>
     <meta name="description" content="Learn how to use async operations with CompletableFuture in the Loops Java SDK">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+
             <ul class="navbar-nav">
                 <li><a href="../getting-started.html">Getting Started</a></li>
                 <li><a href="contacts.html">Guides</a></li>
                 <li><a href="../examples/index.html">Examples</a></li>
                 <li><a href="../api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -37,7 +70,8 @@
     <div class="content">
         <h1>Asynchronous Operations</h1>
 
-        <p>The Loops Java SDK provides full asynchronous support using Java's <code>CompletableFuture</code>. This guide shows you how to use async operations to improve performance and build non-blocking applications.</p>
+        <p>The Loops Java SDK provides full asynchronous support using Java's <code>CompletableFuture</code>. This guide
+            shows you how to use async operations to improve performance and build non-blocking applications.</p>
 
         <h2>Table of Contents</h2>
         <ul>
@@ -53,7 +87,9 @@
 
         <h3>Basic Async Call</h3>
 
-        <p>Every synchronous method in the SDK has an async variant with the <code>Async</code> suffix that returns a <code>CompletableFuture</code>:</p>
+        <p>Every synchronous method in the SDK has an async variant with the <code>Async</code> suffix that returns a
+            <code>CompletableFuture</code>:
+        </p>
 
         <pre><code><span class="keyword">import</span> java.util.concurrent.CompletableFuture;
 <span class="keyword">import</span> com.telos.loops.contacts.ContactCreateRequest;
@@ -403,27 +439,34 @@ sendEventsBatched(eventRequests, <span class="number">10</span>)
 
         <div class="alert alert-success">
             <h4>Use Async for Batch Operations</h4>
-            <p>When performing multiple independent operations (creating contacts, sending events), use async methods to execute them in parallel for significantly better performance.</p>
+            <p>When performing multiple independent operations (creating contacts, sending events), use async methods to
+                execute them in parallel for significantly better performance.</p>
         </div>
 
         <div class="alert alert-info">
             <h4>Handle Errors Gracefully</h4>
-            <p>Always use <code>exceptionally</code> or <code>handle</code> to manage errors in async chains. Unhandled exceptions in CompletableFutures can lead to silent failures.</p>
+            <p>Always use <code>exceptionally</code> or <code>handle</code> to manage errors in async chains. Unhandled
+                exceptions in CompletableFutures can lead to silent failures.</p>
         </div>
 
         <div class="alert alert-warning">
             <h4>Avoid Blocking</h4>
-            <p>Don't use <code>.join()</code> or <code>.get()</code> in production code unless necessary. Use callback methods like <code>thenAccept</code> and <code>thenCompose</code> to maintain non-blocking behavior.</p>
+            <p>Don't use <code>.join()</code> or <code>.get()</code> in production code unless necessary. Use callback
+                methods like <code>thenAccept</code> and <code>thenCompose</code> to maintain non-blocking behavior.</p>
         </div>
 
         <div class="alert alert-info">
             <h4>Control Concurrency</h4>
-            <p>When processing large batches, control the level of parallelism to avoid overwhelming the API or exhausting system resources. Use semaphores or partition your work into smaller batches.</p>
+            <p>When processing large batches, control the level of parallelism to avoid overwhelming the API or
+                exhausting system resources. Use semaphores or partition your work into smaller batches.</p>
         </div>
 
         <div class="alert alert-success">
             <h4>Thread Pool Management</h4>
-            <p>The SDK uses the default ForkJoinPool for async operations. For applications with specific threading requirements, consider providing a custom executor via <code>CompletableFuture.supplyAsync(supplier, executor)</code>.</p>
+            <p>The SDK uses the default ForkJoinPool for async operations. For applications with specific threading
+                requirements, consider providing a custom executor via
+                <code>CompletableFuture.supplyAsync(supplier, executor)</code>.
+            </p>
         </div>
 
         <h2>Common Patterns</h2>
@@ -489,15 +532,19 @@ client.contacts().createAsync(request)
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Examples - Loops Java SDK</title>
     <meta name="description" content="Runnable code examples for the Loops Java SDK">
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -17,7 +30,12 @@
                 <li><a href="../guides/contacts.html">Guides</a></li>
                 <li><a href="index.html">Examples</a></li>
                 <li><a href="../api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -36,10 +54,12 @@
     <div class="content">
         <h1>Code Examples</h1>
 
-        <p>Complete, runnable Java examples demonstrating common use cases for the Loops Java SDK. Each example is a standalone file that you can copy and run in your project.</p>
+        <p>Complete, runnable Java examples demonstrating common use cases for the Loops Java SDK. Each example is a
+            standalone file that you can copy and run in your project.</p>
 
         <div class="alert alert-info">
-            <strong>Running Examples:</strong> All examples require the <code>LOOPS_API_KEY</code> environment variable to be set. Set it before running:
+            <strong>Running Examples:</strong> All examples require the <code>LOOPS_API_KEY</code> environment variable
+            to be set. Set it before running:
             <pre><code>export LOOPS_API_KEY=your-api-key-here</code></pre>
         </div>
 
@@ -48,7 +68,8 @@
         <!-- Quick Start Example -->
         <div class="feature-card">
             <h3>📘 Quick Start</h3>
-            <p>A simple introduction to the SDK covering basic operations: initializing the client, creating contacts, sending events, and sending transactional emails.</p>
+            <p>A simple introduction to the SDK covering basic operations: initializing the client, creating contacts,
+                sending events, and sending transactional emails.</p>
             <p><strong>Topics covered:</strong></p>
             <ul>
                 <li>Client initialization</li>
@@ -58,14 +79,16 @@
                 <li>Basic error handling</li>
             </ul>
             <p class="mt-2">
-                <a href="https://github.com/telosnath/loops-java-sdk/blob/main/docs/examples/QuickStart.java" target="_blank" class="btn btn-primary">View Source</a>
+                <a href="https://github.com/telos-tech/loops-java-sdk/blob/main/docs/examples/QuickStart.java"
+                    target="_blank" class="btn btn-primary">View Source</a>
             </p>
         </div>
 
         <!-- Contacts Example -->
         <div class="feature-card mt-3">
             <h3>👥 Contacts Management</h3>
-            <p>Comprehensive examples of contact management operations including creating, updating, finding, and deleting contacts.</p>
+            <p>Comprehensive examples of contact management operations including creating, updating, finding, and
+                deleting contacts.</p>
             <p><strong>Topics covered:</strong></p>
             <ul>
                 <li>Creating contacts with custom properties</li>
@@ -76,7 +99,8 @@
                 <li>Working with mailing lists</li>
             </ul>
             <p class="mt-2">
-                <a href="https://github.com/telosnath/loops-java-sdk/blob/main/docs/examples/ContactsExample.java" target="_blank" class="btn btn-primary">View Source</a>
+                <a href="https://github.com/telos-tech/loops-java-sdk/blob/main/docs/examples/ContactsExample.java"
+                    target="_blank" class="btn btn-primary">View Source</a>
             </p>
         </div>
 
@@ -95,14 +119,16 @@
                 <li>Event idempotency</li>
             </ul>
             <p class="mt-2">
-                <a href="https://github.com/telosnath/loops-java-sdk/blob/main/docs/examples/EventsExample.java" target="_blank" class="btn btn-primary">View Source</a>
+                <a href="https://github.com/telos-tech/loops-java-sdk/blob/main/docs/examples/EventsExample.java"
+                    target="_blank" class="btn btn-primary">View Source</a>
             </p>
         </div>
 
         <!-- Transactional Example -->
         <div class="feature-card mt-3">
             <h3>📧 Transactional Emails</h3>
-            <p>Examples of sending transactional emails with data variables, attachments, and pagination through sent emails.</p>
+            <p>Examples of sending transactional emails with data variables, attachments, and pagination through sent
+                emails.</p>
             <p><strong>Topics covered:</strong></p>
             <ul>
                 <li>Sending basic transactional emails</li>
@@ -113,14 +139,16 @@
                 <li>Common templates (password reset, order confirmation)</li>
             </ul>
             <p class="mt-2">
-                <a href="https://github.com/telosnath/loops-java-sdk/blob/main/docs/examples/TransactionalExample.java" target="_blank" class="btn btn-primary">View Source</a>
+                <a href="https://github.com/telos-tech/loops-java-sdk/blob/main/docs/examples/TransactionalExample.java"
+                    target="_blank" class="btn btn-primary">View Source</a>
             </p>
         </div>
 
         <!-- Async Example -->
         <div class="feature-card mt-3">
             <h3>⚡ Asynchronous Operations</h3>
-            <p>Advanced examples demonstrating async operations with CompletableFuture for better performance and parallel processing.</p>
+            <p>Advanced examples demonstrating async operations with CompletableFuture for better performance and
+                parallel processing.</p>
             <p><strong>Topics covered:</strong></p>
             <ul>
                 <li>Basic async operations</li>
@@ -133,7 +161,8 @@
                 <li>Timeout handling</li>
             </ul>
             <p class="mt-2">
-                <a href="https://github.com/telosnath/loops-java-sdk/blob/main/docs/examples/AsyncExample.java" target="_blank" class="btn btn-primary">View Source</a>
+                <a href="https://github.com/telos-tech/loops-java-sdk/blob/main/docs/examples/AsyncExample.java"
+                    target="_blank" class="btn btn-primary">View Source</a>
             </p>
         </div>
 
@@ -163,10 +192,12 @@ $env:LOOPS_API_KEY = <span class="string">"your-api-key-here"</span></code></pre
 implementation <span class="string">'com.telos:loops-java-sdk:1.0.0'</span></code></pre>
 
         <h3>3. Copy and Run</h3>
-        <p>Copy the example code into your project and run it. Each example is self-contained with detailed comments explaining each step.</p>
+        <p>Copy the example code into your project and run it. Each example is self-contained with detailed comments
+            explaining each step.</p>
 
         <h3>4. Customize</h3>
-        <p>Modify the examples to fit your specific use case. Replace hardcoded values with your own data, add error handling, or integrate with your application logic.</p>
+        <p>Modify the examples to fit your specific use case. Replace hardcoded values with your own data, add error
+            handling, or integrate with your application logic.</p>
 
         <h2 class="mt-4">Getting Help</h2>
 
@@ -176,12 +207,15 @@ implementation <span class="string">'com.telos:loops-java-sdk:1.0.0'</span></cod
             <li>Check the <a href="../api/index.html">API Reference</a> for detailed documentation</li>
             <li>Read the <a href="../guides/contacts.html">Usage Guides</a> for in-depth explanations</li>
             <li>Review the <a href="../guides/error-handling.html">Error Handling Guide</a> for troubleshooting</li>
-            <li>Report issues on <a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">GitHub</a></li>
+            <li>Report issues on <a href="https://github.com/telos-tech/loops-java-sdk/issues"
+                    target="_blank">GitHub</a>
+            </li>
         </ul>
 
         <h2 class="mt-4">Contributing Examples</h2>
 
-        <p>Have a useful example to share? We welcome contributions! Submit a pull request on <a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a> with your example.</p>
+        <p>Have a useful example to share? We welcome contributions! Submit a pull request on <a
+                href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a> with your example.</p>
 
         <div class="alert alert-info">
             <strong>Example Guidelines:</strong>
@@ -200,15 +234,19 @@ implementation <span class="string">'com.telos:loops-java-sdk:1.0.0'</span></cod
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

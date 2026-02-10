@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loops Java SDK - Type-Safe Java Client for Loops.so</title>
     <meta name="description" content="A modern, type-safe Java SDK for the Loops.so API with full async support">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="navbar-brand">Loops Java SDK</a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+
             <ul class="navbar-nav">
                 <li><a href="getting-started.html">Getting Started</a></li>
                 <li><a href="guides/contacts.html">Guides</a></li>
                 <li><a href="examples/index.html">Examples</a></li>
                 <li><a href="api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -75,31 +108,36 @@ client.transactional().send(
             <div class="feature-card">
                 <div class="feature-icon">📦</div>
                 <h3>Full API Coverage</h3>
-                <p>Complete support for all Loops.so API endpoints including contacts, events, transactional emails, mailing lists, and custom properties.</p>
+                <p>Complete support for all Loops.so API endpoints including contacts, events, transactional emails,
+                    mailing lists, and custom properties.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
                 <h3>Async Support</h3>
-                <p>All operations available in both synchronous and asynchronous (CompletableFuture) variants for maximum flexibility.</p>
+                <p>All operations available in both synchronous and asynchronous (CompletableFuture) variants for
+                    maximum flexibility.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
                 <h3>Type-Safe</h3>
-                <p>Built with Java 21+ records for immutable, type-safe data models that catch errors at compile time.</p>
+                <p>Built with Java 21+ records for immutable, type-safe data models that catch errors at compile time.
+                </p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🔄</div>
                 <h3>Resilient</h3>
-                <p>Built-in retry logic for rate limiting with exponential backoff, ensuring reliable API communication.</p>
+                <p>Built-in retry logic for rate limiting with exponential backoff, ensuring reliable API communication.
+                </p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🎯</div>
                 <h3>Modern Java</h3>
-                <p>Leverages modern Java features including records, sealed classes, and pattern matching for clean, maintainable code.</p>
+                <p>Leverages modern Java features including records, sealed classes, and pattern matching for clean,
+                    maintainable code.</p>
             </div>
 
             <div class="feature-card">
@@ -140,6 +178,7 @@ client.transactional().send(
             <ul>
                 <li><a href="getting-started.html">Installation & Setup →</a></li>
                 <li><a href="getting-started.html#basic-usage">Basic Usage →</a></li>
+                <li><a href="guides/configuration.html">Configuration →</a></li>
             </ul>
         </div>
 
@@ -159,7 +198,7 @@ client.transactional().send(
             <ul>
                 <li><a href="api/index.html">API Documentation (JavaDoc) →</a></li>
                 <li><a href="examples/index.html">Code Examples →</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub Repository →</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub Repository →</a></li>
                 <li><a href="https://loops.so/docs" target="_blank">Loops.so API Docs →</a></li>
             </ul>
         </div>
@@ -221,15 +260,19 @@ CompletableFuture.allOf(createContact, sendEvent)
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="js/main.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - Loops Java SDK</title>
+    <meta name="description" content="Learn how to configure the Loops Java SDK client">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">Loops Java SDK</a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+
+            <ul class="navbar-nav">
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="guides/contacts.html">Guides</a></li>
+                <li><a href="examples/index.html">Examples</a></li>
+                <li><a href="api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-nav">
+                <li><a href="index.html">Home</a></li>
+                <li>Configuration</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Configuration</h1>
+        <p class="lead">Customize the Loops Java SDK client to fit your application's needs.</p>
+
+        <section id="base-url">
+            <h2>Base URL</h2>
+            <p>By default, the SDK uses <code>https://app.loops.so/api/v1</code> as the base URL. If you need to use a
+                proxy or a different environment, you can configure it when building the client.</p>
+
+            <pre><code class="language-java">LoopsClient client = LoopsClient.builder()
+    .apiKey("your-api-key")
+    .baseUrl("https://your-proxy-url.com/api/v1")
+    .build();</code></pre>
+        </section>
+
+        <section id="timeouts">
+            <h2>Timeouts</h2>
+            <p>You can configure connection and read timeouts to ensure your application remains responsive even if the
+                network is slow.</p>
+
+            <pre><code class="language-java">LoopsClient client = LoopsClient.builder()
+    .apiKey("your-api-key")
+    .connectTimeout(Duration.ofSeconds(5))
+    .readTimeout(Duration.ofSeconds(30))
+    .build();</code></pre>
+        </section>
+
+        <div class="guide-nav">
+            <h3>Next Steps</h3>
+            <ul>
+                <li><a href="getting-started.html">← Getting Started</a></li>
+                <li><a href="guides/contacts.html">Working with Contacts →</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Telos Technologies. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,21 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sending Events - Loops Java SDK</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+
             <ul class="navbar-nav">
                 <li><a href="../getting-started.html">Getting Started</a></li>
                 <li><a href="contacts.html">Guides</a></li>
                 <li><a href="../examples/index.html">Examples</a></li>
                 <li><a href="../api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -33,7 +66,8 @@
     <div class="content">
         <h1>Sending Events</h1>
 
-        <p>Events track user activity and trigger automated email campaigns in Loops. This guide covers how to send events using the Java SDK.</p>
+        <p>Events track user activity and trigger automated email campaigns in Loops. This guide covers how to send
+            events using the Java SDK.</p>
 
         <h2>Basic Event Sending</h2>
 
@@ -80,11 +114,13 @@
 
         <h2>Idempotency</h2>
 
-        <p>Events are idempotent by default within a 24-hour window. The same event (same email/userId and eventName) sent multiple times will only trigger automations once per day.</p>
+        <p>Events are idempotent by default within a 24-hour window. The same event (same email/userId and eventName)
+            sent multiple times will only trigger automations once per day.</p>
 
         <div class="alert alert-info">
             <h4>Event Deduplication</h4>
-            <p>Loops automatically deduplicates events based on email/userId and eventName within a 24-hour period. This prevents duplicate email sends if an event is accidentally sent multiple times.</p>
+            <p>Loops automatically deduplicates events based on email/userId and eventName within a 24-hour period. This
+                prevents duplicate email sends if an event is accidentally sent multiple times.</p>
         </div>
 
         <h2>Common Event Types</h2>
@@ -183,17 +219,20 @@ client.events().send(
 
         <div class="alert alert-info">
             <h4>Event Naming</h4>
-            <p>Use descriptive, action-based event names in snake_case (e.g., "user_signed_up", "purchase_completed"). Events must be defined in your Loops dashboard before sending.</p>
+            <p>Use descriptive, action-based event names in snake_case (e.g., "user_signed_up", "purchase_completed").
+                Events must be defined in your Loops dashboard before sending.</p>
         </div>
 
         <div class="alert alert-warning">
             <h4>Event Properties</h4>
-            <p>Keep event properties relevant and minimal. Only include data that will be used in your email campaigns or for segmentation.</p>
+            <p>Keep event properties relevant and minimal. Only include data that will be used in your email campaigns
+                or for segmentation.</p>
         </div>
 
         <div class="alert alert-success">
             <h4>Performance</h4>
-            <p>For sending multiple events, use async methods to improve performance. See the <a href="async.html">Async Guide</a>.</p>
+            <p>For sending multiple events, use async methods to improve performance. See the <a href="async.html">Async
+                    Guide</a>.</p>
         </div>
 
         <h2>Related Guides</h2>
@@ -217,15 +256,19 @@ client.events().send(
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

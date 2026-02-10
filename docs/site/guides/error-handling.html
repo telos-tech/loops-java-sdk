@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error Handling - Loops Java SDK</title>
     <meta name="description" content="Comprehensive guide to error handling in the Loops Java SDK">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+
             <ul class="navbar-nav">
                 <li><a href="../getting-started.html">Getting Started</a></li>
                 <li><a href="contacts.html">Guides</a></li>
                 <li><a href="../examples/index.html">Examples</a></li>
                 <li><a href="../api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -37,7 +70,8 @@
     <div class="content">
         <h1>Error Handling</h1>
 
-        <p>This guide covers how to handle errors effectively when using the Loops Java SDK. Understanding the exception hierarchy and error handling patterns will help you build robust applications.</p>
+        <p>This guide covers how to handle errors effectively when using the Loops Java SDK. Understanding the exception
+            hierarchy and error handling patterns will help you build robust applications.</p>
 
         <h2>Table of Contents</h2>
         <ul>
@@ -107,7 +141,8 @@ client.transactional().send(
 
         <h3>RateLimitExceededException</h3>
 
-        <p>A specialized subclass of <code>LoopsApiException</code> thrown when the API rate limit is exceeded (HTTP 429).</p>
+        <p>A specialized subclass of <code>LoopsApiException</code> thrown when the API rate limit is exceeded (HTTP
+            429).</p>
 
         <pre><code><span class="keyword">import</span> com.telos.loops.error.RateLimitExceededException;
 
@@ -478,32 +513,43 @@ createContactWithAsyncRetry(request, <span class="number">3</span>, <span class=
 
         <div class="alert alert-success">
             <h4>Catch Specific Exceptions First</h4>
-            <p>Always catch more specific exceptions (<code>RateLimitExceededException</code>, <code>LoopsValidationException</code>) before general ones (<code>LoopsApiException</code>, <code>RuntimeException</code>).</p>
+            <p>Always catch more specific exceptions (<code>RateLimitExceededException</code>,
+                <code>LoopsValidationException</code>) before general ones (<code>LoopsApiException</code>,
+                <code>RuntimeException</code>).
+            </p>
         </div>
 
         <div class="alert alert-info">
             <h4>Don't Retry 4xx Errors</h4>
-            <p>Client errors (400, 401, 404, etc.) indicate a problem with your request that won't be fixed by retrying. Only retry rate limits (429) and server errors (5xx).</p>
+            <p>Client errors (400, 401, 404, etc.) indicate a problem with your request that won't be fixed by retrying.
+                Only retry rate limits (429) and server errors (5xx).</p>
         </div>
 
         <div class="alert alert-warning">
             <h4>Respect Rate Limit Headers</h4>
-            <p>When rate limited, always use the <code>retryAfterSeconds()</code> value from <code>RateLimitExceededException</code> rather than arbitrary delays. This ensures you resume as soon as allowed.</p>
+            <p>When rate limited, always use the <code>retryAfterSeconds()</code> value from
+                <code>RateLimitExceededException</code> rather than arbitrary delays. This ensures you resume as soon as
+                allowed.
+            </p>
         </div>
 
         <div class="alert alert-success">
             <h4>Log Error Details</h4>
-            <p>Always log the full error information including status code, error type, and raw body for debugging. The <code>rawBody()</code> method provides complete API response details.</p>
+            <p>Always log the full error information including status code, error type, and raw body for debugging. The
+                <code>rawBody()</code> method provides complete API response details.
+            </p>
         </div>
 
         <div class="alert alert-info">
             <h4>Use Circuit Breakers</h4>
-            <p>For production systems, consider implementing circuit breaker patterns to prevent cascading failures when the API is experiencing issues.</p>
+            <p>For production systems, consider implementing circuit breaker patterns to prevent cascading failures when
+                the API is experiencing issues.</p>
         </div>
 
         <div class="alert alert-warning">
             <h4>Handle Validation Errors Early</h4>
-            <p>Validate input data before making API calls when possible. This reduces API usage and provides faster feedback to users.</p>
+            <p>Validate input data before making API calls when possible. This reduces API usage and provides faster
+                feedback to users.</p>
         </div>
 
         <h2>Complete Error Handling Example</h2>
@@ -573,8 +619,10 @@ createContactWithAsyncRetry(request, <span class="number">3</span>, <span class=
         <p>For detailed exception class documentation, see:</p>
         <ul>
             <li><a href="../api/com/telos/loops/error/LoopsApiException.html">LoopsApiException JavaDoc</a></li>
-            <li><a href="../api/com/telos/loops/error/LoopsValidationException.html">LoopsValidationException JavaDoc</a></li>
-            <li><a href="../api/com/telos/loops/error/RateLimitExceededException.html">RateLimitExceededException JavaDoc</a></li>
+            <li><a href="../api/com/telos/loops/error/LoopsValidationException.html">LoopsValidationException
+                    JavaDoc</a></li>
+            <li><a href="../api/com/telos/loops/error/RateLimitExceededException.html">RateLimitExceededException
+                    JavaDoc</a></li>
         </ul>
     </div>
 
@@ -583,15 +631,19 @@ createContactWithAsyncRetry(request, <span class="number">3</span>, <span class=
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

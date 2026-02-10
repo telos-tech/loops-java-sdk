@@ -9,7 +9,7 @@
 
     <name>Loops Java SDK</name>
     <description>Java SDK for Loops.so (events + transactional, sync + async)</description>
-    <url>https://github.com/telosnath/loops-java-sdk</url>
+    <url>https://github.com/telos-tech/loops-java-sdk</url>
 
     <licenses>
         <license>
@@ -21,16 +21,16 @@
 
     <developers>
         <developer>
-            <id>telosnath</id>
-            <name>Telos Development</name>
-            <email>dev@telos.com</email>
+            <id>telos</id>
+            <name>Telos Technologies</name>
+            <email>admin@telos-technologies.com</email>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/telosnath/loops-java-sdk.git</connection>
-        <developerConnection>scm:git:ssh://github.com:telosnath/loops-java-sdk.git</developerConnection>
-        <url>https://github.com/telosnath/loops-java-sdk/tree/main</url>
+        <connection>scm:git:git://github.com/telos-tech/loops-java-sdk.git</connection>
+        <developerConnection>scm:git:ssh://github.com:telos-tech/loops-java-sdk.git</developerConnection>
+        <url>https://github.com/telos-tech/loops-java-sdk/tree/main</url>
     </scm>
 
     <properties>
@@ -48,9 +48,9 @@
 
         <!-- Testing -->
         <junit.version>5.10.2</junit.version>
-        <assertj.version>3.25.3</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
         <mockito.version>5.11.0</mockito.version>
-        <wiremock.version>3.4.2</wiremock.version>
+        <wiremock.version>3.13.2</wiremock.version>
         <awaitility.version>4.2.0</awaitility.version>
 
         <!-- Tools -->
@@ -58,7 +58,7 @@
         <spotbugs.plugin.version>4.9.8.2</spotbugs.plugin.version>
         <spotless.version>2.43.0</spotless.version>
         <jacoco.version>0.8.11</jacoco.version>
-        <dependency-check.version>9.0.9</dependency-check.version>
+        <dependency-check.version>12.2.0</dependency-check.version>
         <cyclonedx.version>2.7.11</cyclonedx.version>
     </properties>
 
@@ -190,7 +190,6 @@
 
                             <!-- Generator -->
                             <generatorName>java</generatorName>
-                            <serializationLibrary>jackson</serializationLibrary>
                             <library>native</library>
 
                             <!-- Where generated code goes -->
@@ -517,7 +516,7 @@
                             <notimestamp>true</notimestamp>
                             <windowtitle>Loops Java SDK ${project.version} API</windowtitle>
                             <doctitle>Loops Java SDK ${project.version}</doctitle>
-                            <bottom><![CDATA[Copyright &#169; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
+                            <bottom><![CDATA[Copyright &#169; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
                         </configuration>
                     </execution>
                 </executions>
@@ -626,7 +625,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
+                        <version>1.7.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
