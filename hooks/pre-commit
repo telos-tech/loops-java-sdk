@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[pre-commit] Running Spotless check..."
+if ! mvn -q -Dspotless.apply.skip=true spotless:check; then
+  echo
+  echo "[pre-commit] Spotless check failed. To auto-format run: mvn spotless:apply"
+  exit 1
+fi
+
+echo "[pre-commit] Running SpotBugs..."
+if ! mvn -q -DskipTests=true spotbugs:check; then
+  echo
+  echo "[pre-commit] SpotBugs failed. Fix issues then re-commit."
+  exit 1
+fi
+
+echo "[pre-commit] All checks passed."
+
