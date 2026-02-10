@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.telos</groupId>
+    <groupId>io.github.telos-tech</groupId>
     <artifactId>loops-java-sdk</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Loops Java SDK</name>
-    <description>Java SDK for Loops.so (events + transactional, sync + async)</description>
+    <description>Java SDK for Loops.so</description>
     <url>https://github.com/telos-tech/loops-java-sdk</url>
 
     <licenses>
@@ -471,7 +471,8 @@
                             <reportOutputDirectory>${project.build.directory}/docs-site/api</reportOutputDirectory>
 
                             <!-- Exclude internal packages -->
-                            <excludePackageNames>com.telos.loops.internal:com.telos.loops.internal.*</excludePackageNames>
+                            <excludePackageNames>com.telos.loops.internal:com.telos.loops.internal.*
+                            </excludePackageNames>
 
                             <!-- Custom styling and overview -->
                             <stylesheetfile>${project.basedir}/docs/javadoc/stylesheet.css</stylesheetfile>
@@ -485,7 +486,9 @@
                                 </group>
                                 <group>
                                     <title>API Clients</title>
-                                    <packages>com.telos.loops.contacts:com.telos.loops.events:com.telos.loops.transactional:com.telos.loops.lists:com.telos.loops.properties:com.telos.loops.ips:com.telos.loops.apikey</packages>
+                                    <packages>
+                                        com.telos.loops.contacts:com.telos.loops.events:com.telos.loops.transactional:com.telos.loops.lists:com.telos.loops.properties:com.telos.loops.ips:com.telos.loops.apikey
+                                    </packages>
                                 </group>
                                 <group>
                                     <title>Models</title>
@@ -516,7 +519,8 @@
                             <notimestamp>true</notimestamp>
                             <windowtitle>Loops Java SDK ${project.version} API</windowtitle>
                             <doctitle>Loops Java SDK ${project.version}</doctitle>
-                            <bottom><![CDATA[Copyright &#169; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
+                            <bottom>
+                                <![CDATA[Copyright &#169; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
                         </configuration>
                     </execution>
                 </executions>
@@ -603,7 +607,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -621,18 +625,18 @@
                         </executions>
                     </plugin>
 
-                    <!-- Nexus Staging (Maven Central deployment) -->
+                    <!-- Maven Central deployment -->
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.7.0</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.10.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>central</publishingServerId>
+                            <waitForPublishCompletion>true</waitForPublishCompletion>
                         </configuration>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -667,14 +671,5 @@
         </profile>
     </profiles>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+
 </project>
