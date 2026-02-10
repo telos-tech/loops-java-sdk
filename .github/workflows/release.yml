@@ -29,13 +29,13 @@ jobs:
       - name: Create Maven settings.xml for Central token
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << 'EOF'
+          cat > ~/.m2/settings.xml <<EOF
           <settings>
             <servers>
               <server>
                 <id>central</id>
-                <username>${env.CENTRAL_TOKEN_USERNAME}</username>
-                <password>${env.CENTRAL_TOKEN_PASSWORD}</password>
+                <username>${CENTRAL_TOKEN_USERNAME}</username>
+                <password>${CENTRAL_TOKEN_PASSWORD}</password>
               </server>
             </servers>
           </settings>
