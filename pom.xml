@@ -22,7 +22,7 @@
     <developers>
         <developer>
             <id>telos</id>
-            <name>Telos Development</name>
+            <name>Telos Technologies</name>
             <email>admin@telos-technologies.com</email>
         </developer>
     </developers>
@@ -516,7 +516,7 @@
                             <notimestamp>true</notimestamp>
                             <windowtitle>Loops Java SDK ${project.version} API</windowtitle>
                             <doctitle>Loops Java SDK ${project.version}</doctitle>
-                            <bottom><![CDATA[Copyright &#169; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
+                            <bottom><![CDATA[Copyright &#169; 2026 Telos Technologies. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
                         </configuration>
                     </execution>
                 </executions>
