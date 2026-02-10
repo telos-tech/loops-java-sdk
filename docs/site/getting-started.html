@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Getting Started - Loops Java SDK</title>
     <meta name="description" content="Get started with the Loops Java SDK - installation, setup, and basic usage">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -17,7 +38,12 @@
                 <li><a href="guides/contacts.html">Guides</a></li>
                 <li><a href="examples/index.html">Examples</a></li>
                 <li><a href="api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -49,7 +75,8 @@
         </ul>
 
         <div class="alert alert-info">
-            <strong>Getting an API Key:</strong> Log in to your Loops.so dashboard and navigate to Settings → API Keys to generate your API key.
+            <strong>Getting an API Key:</strong> Log in to your Loops.so dashboard and navigate to Settings → API Keys
+            to generate your API key.
         </div>
 
         <h2>Installation</h2>
@@ -96,7 +123,8 @@
 }</code></pre>
 
         <div class="alert alert-warning">
-            <strong>Security Note:</strong> Never hardcode your API key in source code. Use environment variables or a secure configuration management system.
+            <strong>Security Note:</strong> Never hardcode your API key in source code. Use environment variables or a
+            secure configuration management system.
         </div>
 
         <h3>Using Environment Variables</h3>
@@ -212,7 +240,8 @@ $env:LOOPS_API_KEY = <span class="string">"your-api-key-here"</span></code></pre
 }</code></pre>
 
         <div class="alert alert-info">
-            <strong>Automatic Retry:</strong> The SDK automatically retries requests that fail due to rate limiting with exponential backoff.
+            <strong>Automatic Retry:</strong> The SDK automatically retries requests that fail due to rate limiting with
+            exponential backoff.
         </div>
 
         <h2>Asynchronous Operations</h2>
@@ -263,7 +292,9 @@ futureResponse.thenAccept(response -&gt; {
         <ul>
             <li>Check the <a href="api/index.html">API Reference</a> for detailed documentation</li>
             <li>Browse <a href="examples/index.html">code examples</a> for common use cases</li>
-            <li>Report issues on <a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">GitHub</a></li>
+            <li>Report issues on <a href="https://github.com/telos-tech/loops-java-sdk/issues"
+                    target="_blank">GitHub</a>
+            </li>
             <li>Refer to the <a href="https://loops.so/docs" target="_blank">Loops.so API documentation</a></li>
         </ul>
     </div>
@@ -273,15 +304,19 @@ futureResponse.thenAccept(response -&gt; {
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="js/main.js"></script>
 </body>
+
 </html>

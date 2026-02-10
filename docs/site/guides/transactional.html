@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sending Transactional Emails - Loops Java SDK</title>
     <meta name="description" content="Learn how to send transactional emails with the Loops Java SDK">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+
             <ul class="navbar-nav">
                 <li><a href="../getting-started.html">Getting Started</a></li>
                 <li><a href="contacts.html">Guides</a></li>
                 <li><a href="../examples/index.html">Examples</a></li>
                 <li><a href="../api/index.html">API Reference</a></li>
-                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Icon injected by JS -->
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -37,7 +70,8 @@
     <div class="content">
         <h1>Sending Transactional Emails</h1>
 
-        <p>Transactional emails are automated, one-to-one messages triggered by user actions or system events. This guide covers how to send and manage transactional emails using the Loops Java SDK.</p>
+        <p>Transactional emails are automated, one-to-one messages triggered by user actions or system events. This
+            guide covers how to send and manage transactional emails using the Loops Java SDK.</p>
 
         <h2>Table of Contents</h2>
         <ul>
@@ -87,7 +121,8 @@
 
         <h2 id="data-variables">Using Data Variables</h2>
 
-        <p>Data variables allow you to personalize transactional emails with dynamic content. These variables must be defined in your Loops transactional email template.</p>
+        <p>Data variables allow you to personalize transactional emails with dynamic content. These variables must be
+            defined in your Loops transactional email template.</p>
 
         <h3>Basic Data Variables</h3>
 
@@ -200,7 +235,8 @@
 
         <h2 id="idempotency">Idempotency Keys</h2>
 
-        <p>Idempotency keys prevent duplicate email sends. If you send the same request with the same idempotency key within a certain time window, only the first request will be processed.</p>
+        <p>Idempotency keys prevent duplicate email sends. If you send the same request with the same idempotency key
+            within a certain time window, only the first request will be processed.</p>
 
         <h3>Using Idempotency Keys</h3>
 
@@ -240,7 +276,8 @@
 
         <div class="alert alert-info">
             <h4>Idempotency Key Best Practices</h4>
-            <p>Use a combination of a unique identifier (like order ID or user ID) and a timestamp or UUID. Idempotency keys must be no more than 100 characters long.</p>
+            <p>Use a combination of a unique identifier (like order ID or user ID) and a timestamp or UUID. Idempotency
+                keys must be no more than 100 characters long.</p>
         </div>
 
         <h2 id="listing-emails">Listing Sent Emails</h2>
@@ -399,22 +436,26 @@
 
         <div class="alert alert-info">
             <h4>Template Management</h4>
-            <p>Create and test transactional email templates in your Loops dashboard before sending. Templates must be published before they can be used via the API.</p>
+            <p>Create and test transactional email templates in your Loops dashboard before sending. Templates must be
+                published before they can be used via the API.</p>
         </div>
 
         <div class="alert alert-warning">
             <h4>Data Variables</h4>
-            <p>Ensure all data variables used in your email match the variables defined in your template. Missing variables may result in broken template rendering.</p>
+            <p>Ensure all data variables used in your email match the variables defined in your template. Missing
+                variables may result in broken template rendering.</p>
         </div>
 
         <div class="alert alert-success">
             <h4>Idempotency</h4>
-            <p>Always use idempotency keys for critical transactional emails (password resets, order confirmations, etc.) to prevent duplicate sends in case of retries or network issues.</p>
+            <p>Always use idempotency keys for critical transactional emails (password resets, order confirmations,
+                etc.) to prevent duplicate sends in case of retries or network issues.</p>
         </div>
 
         <div class="alert alert-info">
             <h4>Attachment Size</h4>
-            <p>Keep attachments small. Large attachments can impact email deliverability and may be rejected by recipient email servers. Consider hosting large files and including download links instead.</p>
+            <p>Keep attachments small. Large attachments can impact email deliverability and may be rejected by
+                recipient email servers. Consider hosting large files and including download links instead.</p>
         </div>
 
         <h2>Common Use Cases</h2>
@@ -485,10 +526,15 @@ client.transactional().send(
 
         <p>For detailed method signatures and parameters, see:</p>
         <ul>
-            <li><a href="../api/com/telos/loops/transactional/TransactionalClient.html">TransactionalClient JavaDoc</a></li>
-            <li><a href="../api/com/telos/loops/transactional/TransactionalSendRequest.html">TransactionalSendRequest</a></li>
+            <li><a href="../api/com/telos/loops/transactional/TransactionalClient.html">TransactionalClient JavaDoc</a>
+            </li>
+            <li><a
+                    href="../api/com/telos/loops/transactional/TransactionalSendRequest.html">TransactionalSendRequest</a>
+            </li>
             <li><a href="../api/com/telos/loops/transactional/TransactionalResponse.html">TransactionalResponse</a></li>
-            <li><a href="../api/com/telos/loops/transactional/TransactionalListResponse.html">TransactionalListResponse</a></li>
+            <li><a
+                    href="../api/com/telos/loops/transactional/TransactionalListResponse.html">TransactionalListResponse</a>
+            </li>
         </ul>
     </div>
 
@@ -497,15 +543,19 @@ client.transactional().send(
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT"
+                            target="_blank">MIT License</a>.</p>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
-                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telos-tech/loops-java-sdk/issues" target="_blank">Issues</a></li>
                     <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
                 </ul>
             </div>
         </div>
     </footer>
+
+    <script src="../js/main.js"></script>
 </body>
+
 </html>
