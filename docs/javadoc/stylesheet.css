@@ -1,0 +1,161 @@
+/* Custom JavaDoc Stylesheet for Loops Java SDK */
+
+/* Import default JavaDoc styles */
+@import url("resource-files/stylesheet.css");
+
+/* Custom color scheme */
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --background-color: #ffffff;
+    --code-background: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-color: #1e293b;
+    --link-color: #2563eb;
+    --link-hover: #1d4ed8;
+}
+
+/* Override body styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Header styling */
+.top-nav {
+    background-color: var(--primary-color);
+    padding: 1rem;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.top-nav a:hover {
+    color: #f1f5f9;
+}
+
+/* Navigation improvements */
+.sub-nav {
+    background-color: var(--code-background);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Code blocks */
+pre, code {
+    background-color: var(--code-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+
+pre {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+code {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.9em;
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+th {
+    background-color: var(--code-background);
+    font-weight: 600;
+}
+
+/* Method and class signatures */
+.member-signature {
+    background-color: var(--code-background);
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+/* Improve headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Package and class descriptions */
+.description {
+    margin: 1.5rem 0;
+    line-height: 1.8;
+}
+
+/* Deprecation notices */
+.deprecation-block {
+    background-color: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+/* Search box */
+#search-input {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Summary tables */
+.summary-table {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.summary-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.summary-table tr:hover {
+    background-color: var(--code-background);
+}
+
+/* Footer */
+.footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}

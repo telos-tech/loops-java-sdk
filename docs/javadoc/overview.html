@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loops Java SDK - Overview</title>
+</head>
+<body>
+<h1>Loops Java SDK</h1>
+
+<p>
+    A type-safe Java SDK for the <a href="https://loops.so" target="_blank">Loops.so</a> API,
+    providing full API coverage for contacts, events, transactional emails, mailing lists,
+    and custom properties.
+</p>
+
+<h2>Features</h2>
+<ul>
+    <li><strong>Full API Coverage</strong> - Supports all Loops.so API endpoints</li>
+    <li><strong>Async Support</strong> - Both synchronous and asynchronous (CompletableFuture) methods</li>
+    <li><strong>Type-Safe</strong> - Leverages Java records for immutable, type-safe data models</li>
+    <li><strong>Resilient</strong> - Built-in retry logic for rate limiting</li>
+    <li><strong>Modern Java</strong> - Built for Java 21+</li>
+</ul>
+
+<h2>Quick Start</h2>
+
+<pre><code>
+// Initialize the client
+LoopsClient client = LoopsClient.builder()
+        .apiKey("your-api-key")
+        .build();
+
+// Create a contact
+ContactResponse response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email("user@example.com")
+        .firstName("John")
+        .lastName("Doe")
+        .build()
+);
+
+// Send an event
+EventResponse eventResponse = client.events().send(
+    EventRequest.builder()
+        .email("user@example.com")
+        .eventName("signed_up")
+        .build()
+);
+
+// Send a transactional email
+TransactionalResponse emailResponse = client.transactional().send(
+    TransactionalRequest.builder()
+        .transactionalId("welcome_email")
+        .email("user@example.com")
+        .build()
+);
+</code></pre>
+
+<h2>Getting Started</h2>
+
+<p>
+    To get started with the Loops Java SDK:
+</p>
+
+<ol>
+    <li>Add the dependency to your project (Maven or Gradle)</li>
+    <li>Obtain an API key from your Loops.so account</li>
+    <li>Initialize the {@link com.telos.loops.LoopsClient} with your API key</li>
+    <li>Use the various client methods to interact with the Loops.so API</li>
+</ol>
+
+<h2>Main Components</h2>
+
+<h3>Core Client</h3>
+<ul>
+    <li>{@link com.telos.loops.LoopsClient} - Main entry point for the SDK</li>
+</ul>
+
+<h3>API Clients</h3>
+<ul>
+    <li>{@link com.telos.loops.contacts.ContactsClient} - Manage contacts (create, update, delete, find)</li>
+    <li>{@link com.telos.loops.events.EventsClient} - Send events to Loops</li>
+    <li>{@link com.telos.loops.transactional.TransactionalClient} - Send transactional emails</li>
+    <li>{@link com.telos.loops.lists.MailingListsClient} - Manage mailing lists</li>
+    <li>{@link com.telos.loops.properties.ContactPropertiesClient} - Manage custom contact properties</li>
+    <li>{@link com.telos.loops.ips.DedicatedIpsClient} - Manage dedicated IPs</li>
+    <li>{@link com.telos.loops.apikey.ApiKeyClient} - Retrieve API key information</li>
+</ul>
+
+<h3>Error Handling</h3>
+<ul>
+    <li>{@link com.telos.loops.error.LoopsApiException} - Base exception for API errors</li>
+    <li>{@link com.telos.loops.error.LoopsValidationException} - Validation errors</li>
+    <li>{@link com.telos.loops.error.RateLimitExceededException} - Rate limit errors</li>
+</ul>
+
+<h2>Asynchronous Operations</h2>
+
+<p>
+    All API methods have asynchronous variants that return {@link java.util.concurrent.CompletableFuture}.
+    Asynchronous method names end with "Async":
+</p>
+
+<pre><code>
+// Synchronous
+ContactResponse response = client.contacts().create(request);
+
+// Asynchronous
+CompletableFuture&lt;ContactResponse&gt; futureResponse =
+    client.contacts().createAsync(request);
+
+// Handle the result
+futureResponse.thenAccept(response -&gt; {
+    System.out.println("Contact created: " + response.id());
+});
+</code></pre>
+
+<h2>Requirements</h2>
+<ul>
+    <li>Java 21 or higher</li>
+    <li>Maven 3.8+ or Gradle 7.0+</li>
+</ul>
+
+<h2>Resources</h2>
+<ul>
+    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub Repository</a></li>
+    <li><a href="https://loops.so/docs" target="_blank">Loops.so API Documentation</a></li>
+    <li><a href="https://telos-tech.github.io/loops-java-sdk/" target="_blank">SDK Documentation</a></li>
+</ul>
+
+</body>
+</html>

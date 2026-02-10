@@ -25,23 +25,52 @@ Add the dependency to your `pom.xml`:
 </dependency>
 ```
 
-## Usage
+## Documentation
+
+- 📘 [Getting Started Guide](https://telos-tech.github.io/loops-java-sdk/getting-started.html)
+- 📚 [API Reference (JavaDoc)](https://telos-tech.github.io/loops-java-sdk/api/)
+- 📖 [Usage Guides](https://telos-tech.github.io/loops-java-sdk/guides/contacts.html)
+- 💡 [Code Examples](https://telos-tech.github.io/loops-java-sdk/examples/)
+
+## Quick Start
 
 ```java
 import com.telos.loops.LoopsClient;
-import com.telos.loops.contacts.ContactUpdateRequest;
+import com.telos.loops.contacts.ContactCreateRequest;
+import com.telos.loops.events.EventRequest;
+import com.telos.loops.transactional.TransactionalRequest;
 
 public class App {
     public static void main(String[] args) {
+        // Initialize the client
         LoopsClient client = LoopsClient.builder()
                 .apiKey("your-api-key")
                 .build();
 
         // Create a contact
-        client.contacts().create(new ContactUpdateRequest("user@example.com", "user_123"));
-        
+        client.contacts().create(
+            ContactCreateRequest.builder()
+                .email("user@example.com")
+                .firstName("John")
+                .lastName("Doe")
+                .build()
+        );
+
         // Send an event
-        client.events().send(new EventSendRequest("user@example.com", "Signup"));
+        client.events().send(
+            EventRequest.builder()
+                .email("user@example.com")
+                .eventName("signed_up")
+                .build()
+        );
+
+        // Send a transactional email
+        client.transactional().send(
+            TransactionalRequest.builder()
+                .transactionalId("welcome_email")
+                .email("user@example.com")
+                .build()
+        );
     }
 }
 ```

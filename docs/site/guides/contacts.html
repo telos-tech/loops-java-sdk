@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working with Contacts - Loops Java SDK</title>
+    <meta name="description" content="Learn how to manage contacts in Loops using the Java SDK">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+            <ul class="navbar-nav">
+                <li><a href="../getting-started.html">Getting Started</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-nav">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li>Contacts</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Working with Contacts</h1>
+
+        <p>This guide covers all contact management operations available in the Loops Java SDK.</p>
+
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#creating-contacts">Creating Contacts</a></li>
+            <li><a href="#updating-contacts">Updating Contacts</a></li>
+            <li><a href="#finding-contacts">Finding Contacts</a></li>
+            <li><a href="#deleting-contacts">Deleting Contacts</a></li>
+            <li><a href="#custom-properties">Working with Custom Properties</a></li>
+            <li><a href="#mailing-lists">Adding to Mailing Lists</a></li>
+        </ul>
+
+        <h2 id="creating-contacts">Creating Contacts</h2>
+
+        <h3>Basic Contact Creation</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.contacts.ContactCreateRequest;
+<span class="keyword">import</span> com.telos.loops.contacts.ContactResponse;
+
+<span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"John"</span>)
+        .lastName(<span class="string">"Doe"</span>)
+        .build()
+);
+
+<span class="keyword">if</span> (response.success()) {
+    System.out.println(<span class="string">"Contact created with ID: "</span> + response.id());
+}</code></pre>
+
+        <h3>Creating Contacts with Custom Properties</h3>
+
+        <pre><code><span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"Jane"</span>)
+        .lastName(<span class="string">"Smith"</span>)
+        .customProperty(<span class="string">"plan"</span>, <span class="string">"premium"</span>)
+        .customProperty(<span class="string">"signupDate"</span>, <span class="string">"2026-02-10"</span>)
+        .customProperty(<span class="string">"lifetimeValue"</span>, <span class="number">299.99</span>)
+        .customProperty(<span class="string">"emailVerified"</span>, <span class="keyword">true</span>)
+        .build()
+);</code></pre>
+
+        <h3>Adding to Mailing Lists on Creation</h3>
+
+        <pre><code><span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"John"</span>)
+        .mailingListId(<span class="string">"list_abc123"</span>)
+        .build()
+);</code></pre>
+
+        <h3>Opt-in Source Tracking</h3>
+
+        <pre><code><span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"John"</span>)
+        .source(<span class="string">"Landing Page A"</span>)
+        .build()
+);</code></pre>
+
+        <h2 id="updating-contacts">Updating Contacts</h2>
+
+        <h3>Update Contact Details</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.contacts.ContactUpdateRequest;
+
+<span class="keyword">ContactResponse</span> response = client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"Jane"</span>)
+        .lastName(<span class="string">"Doe-Smith"</span>)
+        .build()
+);</code></pre>
+
+        <h3>Update Custom Properties</h3>
+
+        <pre><code><span class="keyword">ContactResponse</span> response = client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .customProperty(<span class="string">"plan"</span>, <span class="string">"enterprise"</span>)
+        .customProperty(<span class="string">"lastLogin"</span>, LocalDateTime.now().toString())
+        .build()
+);</code></pre>
+
+        <h3>Subscribing and Unsubscribing</h3>
+
+        <pre><code><span class="comment">// Subscribe a contact</span>
+<span class="keyword">ContactResponse</span> response = client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .subscribed(<span class="keyword">true</span>)
+        .build()
+);
+
+<span class="comment">// Unsubscribe a contact</span>
+response = client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .subscribed(<span class="keyword">false</span>)
+        .build()
+);</code></pre>
+
+        <h2 id="finding-contacts">Finding Contacts</h2>
+
+        <h3>Find Contact by Email</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.contacts.ContactFindResponse;
+
+<span class="keyword">ContactFindResponse</span> contact = client.contacts().find(
+    <span class="string">"user@example.com"</span>
+);
+
+<span class="keyword">if</span> (contact != null) {
+    System.out.println(<span class="string">"Found contact: "</span> + contact.email());
+    System.out.println(<span class="string">"First name: "</span> + contact.firstName());
+    System.out.println(<span class="string">"Subscribed: "</span> + contact.subscribed());
+
+    <span class="comment">// Access custom properties</span>
+    <span class="keyword">Map&lt;String, Object&gt;</span> customProperties = contact.customProperties();
+    System.out.println(<span class="string">"Plan: "</span> + customProperties.get(<span class="string">"plan"</span>));
+}</code></pre>
+
+        <h3>Find Contact by User ID</h3>
+
+        <pre><code><span class="keyword">ContactFindResponse</span> contact = client.contacts().findByUserId(
+    <span class="string">"user_12345"</span>
+);</code></pre>
+
+        <h2 id="deleting-contacts">Deleting Contacts</h2>
+
+        <h3>Delete Contact by Email</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.contacts.ContactDeleteResponse;
+
+<span class="keyword">ContactDeleteResponse</span> response = client.contacts().delete(
+    <span class="string">"user@example.com"</span>
+);
+
+<span class="keyword">if</span> (response.success()) {
+    System.out.println(<span class="string">"Contact deleted: "</span> + response.message());
+}</code></pre>
+
+        <h3>Delete Contact by User ID</h3>
+
+        <pre><code><span class="keyword">ContactDeleteResponse</span> response = client.contacts().deleteByUserId(
+    <span class="string">"user_12345"</span>
+);</code></pre>
+
+        <h2 id="custom-properties">Working with Custom Properties</h2>
+
+        <p>Custom properties allow you to store additional data with contacts. They must be defined in your Loops dashboard before use.</p>
+
+        <h3>Setting Multiple Properties</h3>
+
+        <pre><code><span class="keyword">ContactResponse</span> response = client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .customProperty(<span class="string">"company"</span>, <span class="string">"Acme Corp"</span>)
+        .customProperty(<span class="string">"role"</span>, <span class="string">"CEO"</span>)
+        .customProperty(<span class="string">"employees"</span>, <span class="number">150</span>)
+        .customProperty(<span class="string">"isPremium"</span>, <span class="keyword">true</span>)
+        .build()
+);</code></pre>
+
+        <h3>Supported Data Types</h3>
+
+        <p>Custom properties support various data types:</p>
+
+        <pre><code><span class="comment">// String</span>
+.customProperty(<span class="string">"name"</span>, <span class="string">"John"</span>)
+
+<span class="comment">// Number (int, long, double)</span>
+.customProperty(<span class="string">"age"</span>, <span class="number">30</span>)
+.customProperty(<span class="string">"revenue"</span>, <span class="number">1299.99</span>)
+
+<span class="comment">// Boolean</span>
+.customProperty(<span class="string">"verified"</span>, <span class="keyword">true</span>)
+
+<span class="comment">// Date/Time (as ISO string)</span>
+.customProperty(<span class="string">"lastSeen"</span>, LocalDateTime.now().toString())</code></pre>
+
+        <h2 id="mailing-lists">Adding to Mailing Lists</h2>
+
+        <p>Contacts can be added to mailing lists during creation or update. See the <a href="../api/com/telos/loops/lists/MailingListsClient.html">MailingListsClient</a> documentation for more details.</p>
+
+        <h2>Best Practices</h2>
+
+        <div class="alert alert-info">
+            <h4>Email as Primary Identifier</h4>
+            <p>Always use email addresses as the primary identifier for contacts. If a contact with the given email already exists, the create operation will update it instead.</p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Custom Properties</h4>
+            <p>Ensure custom properties are defined in your Loops dashboard before using them. Undefined properties will be ignored by the API.</p>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>Batch Operations</h4>
+            <p>For multiple operations, use the async variants to perform them in parallel for better performance. See the <a href="async.html">Async Guide</a> for details.</p>
+        </div>
+
+        <h2>Related Guides</h2>
+
+        <ul>
+            <li><a href="events.html">Sending Events</a> - Track contact activity</li>
+            <li><a href="transactional.html">Transactional Emails</a> - Send emails to contacts</li>
+            <li><a href="async.html">Asynchronous Operations</a> - Batch contact operations</li>
+        </ul>
+
+        <h2>API Reference</h2>
+
+        <p>For detailed method signatures and parameters, see:</p>
+        <ul>
+            <li><a href="../api/com/telos/loops/contacts/ContactsClient.html">ContactsClient JavaDoc</a></li>
+            <li><a href="../api/com/telos/loops/contacts/ContactCreateRequest.html">ContactCreateRequest</a></li>
+            <li><a href="../api/com/telos/loops/contacts/ContactUpdateRequest.html">ContactUpdateRequest</a></li>
+            <li><a href="../api/com/telos/loops/contacts/ContactResponse.html">ContactResponse</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

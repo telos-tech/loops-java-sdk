@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sending Transactional Emails - Loops Java SDK</title>
+    <meta name="description" content="Learn how to send transactional emails with the Loops Java SDK">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+            <ul class="navbar-nav">
+                <li><a href="../getting-started.html">Getting Started</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-nav">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li>Transactional Emails</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Sending Transactional Emails</h1>
+
+        <p>Transactional emails are automated, one-to-one messages triggered by user actions or system events. This guide covers how to send and manage transactional emails using the Loops Java SDK.</p>
+
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#basic-sending">Basic Email Sending</a></li>
+            <li><a href="#data-variables">Using Data Variables</a></li>
+            <li><a href="#attachments">Adding Attachments</a></li>
+            <li><a href="#idempotency">Idempotency Keys</a></li>
+            <li><a href="#listing-emails">Listing Sent Emails</a></li>
+            <li><a href="#pagination">Pagination</a></li>
+            <li><a href="#error-handling">Error Handling</a></li>
+        </ul>
+
+        <h2 id="basic-sending">Basic Email Sending</h2>
+
+        <h3>Send a Simple Email</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.transactional.TransactionalSendRequest;
+<span class="keyword">import</span> com.telos.loops.transactional.TransactionalResponse;
+
+<span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_abc123"</span>,  <span class="comment">// Transactional email ID from Loops</span>
+        <span class="string">"user@example.com"</span>,        <span class="comment">// Recipient email</span>
+        <span class="keyword">null</span>,                        <span class="comment">// addToAudience (optional)</span>
+        <span class="keyword">null</span>,                        <span class="comment">// dataVariables (optional)</span>
+        <span class="keyword">null</span>                         <span class="comment">// attachments (optional)</span>
+    )
+);
+
+<span class="keyword">if</span> (response.success()) {
+    System.out.println(<span class="string">"Email sent successfully"</span>);
+}</code></pre>
+
+        <h3>Add Recipient to Audience</h3>
+
+        <p>Automatically add the recipient to your Loops audience when sending an email:</p>
+
+        <pre><code><span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_abc123"</span>,
+        <span class="string">"user@example.com"</span>,
+        <span class="keyword">true</span>,  <span class="comment">// Add to audience</span>
+        <span class="keyword">null</span>,
+        <span class="keyword">null</span>
+    )
+);</code></pre>
+
+        <h2 id="data-variables">Using Data Variables</h2>
+
+        <p>Data variables allow you to personalize transactional emails with dynamic content. These variables must be defined in your Loops transactional email template.</p>
+
+        <h3>Basic Data Variables</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.Map;
+
+<span class="keyword">Map&lt;String, Object&gt;</span> dataVariables = Map.of(
+    <span class="string">"firstName"</span>, <span class="string">"John"</span>,
+    <span class="string">"orderNumber"</span>, <span class="string">"ORD-12345"</span>,
+    <span class="string">"orderTotal"</span>, <span class="number">99.99</span>,
+    <span class="string">"orderDate"</span>, <span class="string">"2026-02-10"</span>
+);
+
+<span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_order_confirmation"</span>,
+        <span class="string">"user@example.com"</span>,
+        <span class="keyword">true</span>,
+        dataVariables,
+        <span class="keyword">null</span>
+    )
+);</code></pre>
+
+        <h3>Complex Data Variables</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.List;
+
+<span class="keyword">Map&lt;String, Object&gt;</span> dataVariables = Map.of(
+    <span class="string">"customerName"</span>, <span class="string">"Jane Smith"</span>,
+    <span class="string">"invoiceNumber"</span>, <span class="string">"INV-2026-001"</span>,
+    <span class="string">"invoiceAmount"</span>, <span class="number">1299.99</span>,
+    <span class="string">"currency"</span>, <span class="string">"USD"</span>,
+    <span class="string">"dueDate"</span>, <span class="string">"2026-03-10"</span>,
+    <span class="string">"items"</span>, List.of(
+        Map.of(<span class="string">"name"</span>, <span class="string">"Product A"</span>, <span class="string">"quantity"</span>, <span class="number">2</span>, <span class="string">"price"</span>, <span class="number">499.99</span>),
+        Map.of(<span class="string">"name"</span>, <span class="string">"Product B"</span>, <span class="string">"quantity"</span>, <span class="number">1</span>, <span class="string">"price"</span>, <span class="number">300.01</span>)
+    )
+);
+
+<span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_invoice"</span>,
+        <span class="string">"user@example.com"</span>,
+        <span class="keyword">true</span>,
+        dataVariables,
+        <span class="keyword">null</span>
+    )
+);</code></pre>
+
+        <h2 id="attachments">Adding Attachments</h2>
+
+        <p>Include file attachments with your transactional emails. Attachments must be base64-encoded.</p>
+
+        <h3>Single Attachment</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.transactional.TransactionalSendRequest.Attachment;
+<span class="keyword">import</span> java.util.Base64;
+<span class="keyword">import</span> java.util.List;
+
+<span class="comment">// Read file and encode to base64</span>
+<span class="keyword">byte[]</span> fileBytes = Files.readAllBytes(Path.of(<span class="string">"invoice.pdf"</span>));
+<span class="keyword">String</span> base64Content = Base64.getEncoder().encodeToString(fileBytes);
+
+<span class="keyword">List&lt;Attachment&gt;</span> attachments = List.of(
+    <span class="keyword">new</span> Attachment(
+        <span class="string">"invoice.pdf"</span>,           <span class="comment">// Filename</span>
+        <span class="string">"application/pdf"</span>,       <span class="comment">// Content type</span>
+        base64Content                 <span class="comment">// Base64-encoded data</span>
+    )
+);
+
+<span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_invoice"</span>,
+        <span class="string">"user@example.com"</span>,
+        <span class="keyword">true</span>,
+        dataVariables,
+        attachments
+    )
+);</code></pre>
+
+        <h3>Multiple Attachments</h3>
+
+        <pre><code><span class="keyword">List&lt;Attachment&gt;</span> attachments = List.of(
+    <span class="keyword">new</span> Attachment(
+        <span class="string">"invoice.pdf"</span>,
+        <span class="string">"application/pdf"</span>,
+        invoiceBase64
+    ),
+    <span class="keyword">new</span> Attachment(
+        <span class="string">"receipt.pdf"</span>,
+        <span class="string">"application/pdf"</span>,
+        receiptBase64
+    ),
+    <span class="keyword">new</span> Attachment(
+        <span class="string">"logo.png"</span>,
+        <span class="string">"image/png"</span>,
+        logoBase64
+    )
+);
+
+<span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_order_confirmation"</span>,
+        <span class="string">"user@example.com"</span>,
+        <span class="keyword">true</span>,
+        dataVariables,
+        attachments
+    )
+);</code></pre>
+
+        <h2 id="idempotency">Idempotency Keys</h2>
+
+        <p>Idempotency keys prevent duplicate email sends. If you send the same request with the same idempotency key within a certain time window, only the first request will be processed.</p>
+
+        <h3>Using Idempotency Keys</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.UUID;
+
+<span class="comment">// Generate a unique idempotency key (max 100 characters)</span>
+<span class="keyword">String</span> idempotencyKey = <span class="string">"order_"</span> + orderId + <span class="string">"_"</span> + UUID.randomUUID();
+
+<span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_order_confirmation"</span>,
+        <span class="string">"user@example.com"</span>,
+        <span class="keyword">true</span>,
+        dataVariables,
+        <span class="keyword">null</span>
+    ),
+    idempotencyKey  <span class="comment">// Prevents duplicate sends</span>
+);</code></pre>
+
+        <h3>Idempotency in Retry Scenarios</h3>
+
+        <pre><code><span class="keyword">String</span> idempotencyKey = <span class="string">"password_reset_"</span> + userId + <span class="string">"_"</span> + timestamp;
+
+<span class="keyword">try</span> {
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+        request,
+        idempotencyKey
+    );
+} <span class="keyword">catch</span> (Exception e) {
+    <span class="comment">// Safe to retry with the same idempotency key</span>
+    <span class="comment">// If the first attempt succeeded, this will not send a duplicate</span>
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+        request,
+        idempotencyKey
+    );
+}</code></pre>
+
+        <div class="alert alert-info">
+            <h4>Idempotency Key Best Practices</h4>
+            <p>Use a combination of a unique identifier (like order ID or user ID) and a timestamp or UUID. Idempotency keys must be no more than 100 characters long.</p>
+        </div>
+
+        <h2 id="listing-emails">Listing Sent Emails</h2>
+
+        <h3>Get Recently Sent Emails</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.transactional.TransactionalListResponse;
+
+<span class="comment">// Get the most recent emails (default pagination)</span>
+<span class="keyword">TransactionalListResponse</span> response = client.transactional().list();
+
+<span class="keyword">for</span> (<span class="keyword">var</span> email : response.data()) {
+    System.out.println(<span class="string">"Email ID: "</span> + email.id());
+    System.out.println(<span class="string">"To: "</span> + email.to());
+    System.out.println(<span class="string">"Subject: "</span> + email.subject());
+    System.out.println(<span class="string">"Status: "</span> + email.status());
+    System.out.println(<span class="string">"Sent at: "</span> + email.createdAt());
+    System.out.println();
+}</code></pre>
+
+        <h2 id="pagination">Pagination</h2>
+
+        <h3>Control Page Size</h3>
+
+        <pre><code><span class="comment">// Request 20 emails per page (range: 10-50)</span>
+<span class="keyword">TransactionalListResponse</span> response = client.transactional().list(
+    <span class="number">20</span>,   <span class="comment">// perPage (10-50)</span>
+    <span class="keyword">null</span>  <span class="comment">// cursor (null for first page)</span>
+);</code></pre>
+
+        <h3>Navigate Through Pages</h3>
+
+        <pre><code><span class="keyword">String</span> cursor = <span class="keyword">null</span>;
+<span class="keyword">boolean</span> hasMore = <span class="keyword">true</span>;
+
+<span class="keyword">while</span> (hasMore) {
+    <span class="keyword">TransactionalListResponse</span> response = client.transactional().list(
+        <span class="number">25</span>,    <span class="comment">// perPage</span>
+        cursor  <span class="comment">// cursor for next page</span>
+    );
+
+    <span class="comment">// Process emails</span>
+    <span class="keyword">for</span> (<span class="keyword">var</span> email : response.data()) {
+        System.out.println(<span class="string">"Email to: "</span> + email.to());
+    }
+
+    <span class="comment">// Check if there are more pages</span>
+    hasMore = response.hasMore();
+    <span class="keyword">if</span> (hasMore) {
+        cursor = response.nextCursor();
+    }
+}</code></pre>
+
+        <h3>Async Pagination</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.concurrent.CompletableFuture;
+
+<span class="keyword">CompletableFuture&lt;List&lt;TransactionalEmail&gt;&gt;</span> getAllEmails() {
+    <span class="keyword">List&lt;TransactionalEmail&gt;</span> allEmails = <span class="keyword">new</span> ArrayList&lt;&gt;();
+
+    <span class="keyword">return</span> fetchPage(<span class="keyword">null</span>, allEmails)
+        .thenApply(emails -&gt; allEmails);
+}
+
+<span class="keyword">private CompletableFuture&lt;List&lt;TransactionalEmail&gt;&gt;</span> fetchPage(
+    <span class="keyword">String</span> cursor,
+    <span class="keyword">List&lt;TransactionalEmail&gt;</span> accumulator
+) {
+    <span class="keyword">return</span> client.transactional().listAsync(<span class="number">50</span>, cursor)
+        .thenCompose(response -&gt; {
+            accumulator.addAll(response.data());
+
+            <span class="keyword">if</span> (response.hasMore()) {
+                <span class="keyword">return</span> fetchPage(response.nextCursor(), accumulator);
+            } <span class="keyword">else</span> {
+                <span class="keyword">return</span> CompletableFuture.completedFuture(accumulator);
+            }
+        });
+}</code></pre>
+
+        <h2 id="error-handling">Error Handling</h2>
+
+        <h3>Basic Error Handling</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.error.LoopsApiException;
+<span class="keyword">import</span> com.telos.loops.error.LoopsValidationException;
+
+<span class="keyword">try</span> {
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(request);
+
+    <span class="keyword">if</span> (response.success()) {
+        System.out.println(<span class="string">"Email sent successfully"</span>);
+    }
+} <span class="keyword">catch</span> (LoopsValidationException e) {
+    <span class="comment">// Invalid request (missing fields, invalid email, etc.)</span>
+    System.err.println(<span class="string">"Validation error: "</span> + e.getMessage());
+} <span class="keyword">catch</span> (LoopsApiException e) {
+    <span class="comment">// API error</span>
+    System.err.println(<span class="string">"API error (HTTP "</span> + e.statusCode() + <span class="string">"): "</span> + e.getMessage());
+}</code></pre>
+
+        <h3>Handling Invalid Templates</h3>
+
+        <pre><code><span class="keyword">try</span> {
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+        <span class="keyword">new</span> TransactionalSendRequest(
+            <span class="string">"invalid_template_id"</span>,
+            <span class="string">"user@example.com"</span>,
+            <span class="keyword">null</span>,
+            <span class="keyword">null</span>,
+            <span class="keyword">null</span>
+        )
+    );
+} <span class="keyword">catch</span> (LoopsApiException e) {
+    <span class="keyword">if</span> (e.statusCode() == <span class="number">404</span>) {
+        System.err.println(<span class="string">"Transactional email template not found"</span>);
+    }
+}</code></pre>
+
+        <h3>Rate Limiting</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.error.RateLimitExceededException;
+
+<span class="keyword">try</span> {
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(request);
+} <span class="keyword">catch</span> (RateLimitExceededException e) {
+    <span class="keyword">long</span> retryAfter = e.retryAfterSeconds();
+    System.err.println(<span class="string">"Rate limited. Retry after "</span> + retryAfter + <span class="string">" seconds"</span>);
+
+    <span class="comment">// Wait and retry</span>
+    Thread.sleep(retryAfter * <span class="number">1000</span>);
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(request);
+}</code></pre>
+
+        <h3>Validation Errors</h3>
+
+        <pre><code><span class="keyword">try</span> {
+    <span class="comment">// This will throw LoopsValidationException</span>
+    <span class="keyword">TransactionalResponse</span> response = client.transactional().send(
+        <span class="keyword">new</span> TransactionalSendRequest(
+            <span class="string">""</span>,  <span class="comment">// Empty transactionalId</span>
+            <span class="string">"user@example.com"</span>,
+            <span class="keyword">null</span>,
+            <span class="keyword">null</span>,
+            <span class="keyword">null</span>
+        )
+    );
+} <span class="keyword">catch</span> (LoopsValidationException e) {
+    System.err.println(<span class="string">"Request validation failed: "</span> + e.getMessage());
+    <span class="comment">// Output: "transactionalId is required and cannot be blank"</span>
+}</code></pre>
+
+        <h2>Best Practices</h2>
+
+        <div class="alert alert-info">
+            <h4>Template Management</h4>
+            <p>Create and test transactional email templates in your Loops dashboard before sending. Templates must be published before they can be used via the API.</p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Data Variables</h4>
+            <p>Ensure all data variables used in your email match the variables defined in your template. Missing variables may result in broken template rendering.</p>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>Idempotency</h4>
+            <p>Always use idempotency keys for critical transactional emails (password resets, order confirmations, etc.) to prevent duplicate sends in case of retries or network issues.</p>
+        </div>
+
+        <div class="alert alert-info">
+            <h4>Attachment Size</h4>
+            <p>Keep attachments small. Large attachments can impact email deliverability and may be rejected by recipient email servers. Consider hosting large files and including download links instead.</p>
+        </div>
+
+        <h2>Common Use Cases</h2>
+
+        <h3>Password Reset Email</h3>
+
+        <pre><code><span class="keyword">String</span> resetToken = generatePasswordResetToken(userId);
+<span class="keyword">String</span> resetUrl = <span class="string">"https://yourapp.com/reset-password?token="</span> + resetToken;
+
+<span class="keyword">Map&lt;String, Object&gt;</span> data = Map.of(
+    <span class="string">"firstName"</span>, user.getFirstName(),
+    <span class="string">"resetUrl"</span>, resetUrl,
+    <span class="string">"expiresIn"</span>, <span class="string">"24 hours"</span>
+);
+
+client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_password_reset"</span>,
+        user.getEmail(),
+        <span class="keyword">false</span>,
+        data,
+        <span class="keyword">null</span>
+    ),
+    <span class="string">"pwd_reset_"</span> + userId + <span class="string">"_"</span> + System.currentTimeMillis()
+);</code></pre>
+
+        <h3>Order Confirmation with Invoice</h3>
+
+        <pre><code><span class="keyword">byte[]</span> invoicePdf = generateInvoicePdf(order);
+<span class="keyword">String</span> base64Invoice = Base64.getEncoder().encodeToString(invoicePdf);
+
+<span class="keyword">Map&lt;String, Object&gt;</span> data = Map.of(
+    <span class="string">"customerName"</span>, order.getCustomerName(),
+    <span class="string">"orderNumber"</span>, order.getId(),
+    <span class="string">"orderTotal"</span>, order.getTotal(),
+    <span class="string">"orderDate"</span>, order.getCreatedAt().toString(),
+    <span class="string">"items"</span>, order.getItems()
+);
+
+<span class="keyword">List&lt;Attachment&gt;</span> attachments = List.of(
+    <span class="keyword">new</span> Attachment(
+        <span class="string">"invoice-"</span> + order.getId() + <span class="string">".pdf"</span>,
+        <span class="string">"application/pdf"</span>,
+        base64Invoice
+    )
+);
+
+client.transactional().send(
+    <span class="keyword">new</span> TransactionalSendRequest(
+        <span class="string">"transactional_order_confirmation"</span>,
+        order.getCustomerEmail(),
+        <span class="keyword">true</span>,
+        data,
+        attachments
+    ),
+    <span class="string">"order_"</span> + order.getId()
+);</code></pre>
+
+        <h2>Related Guides</h2>
+
+        <ul>
+            <li><a href="contacts.html">Working with Contacts</a> - Manage contact data</li>
+            <li><a href="async.html">Asynchronous Operations</a> - Send emails in parallel</li>
+            <li><a href="error-handling.html">Error Handling</a> - Comprehensive error handling guide</li>
+        </ul>
+
+        <h2>API Reference</h2>
+
+        <p>For detailed method signatures and parameters, see:</p>
+        <ul>
+            <li><a href="../api/com/telos/loops/transactional/TransactionalClient.html">TransactionalClient JavaDoc</a></li>
+            <li><a href="../api/com/telos/loops/transactional/TransactionalSendRequest.html">TransactionalSendRequest</a></li>
+            <li><a href="../api/com/telos/loops/transactional/TransactionalResponse.html">TransactionalResponse</a></li>
+            <li><a href="../api/com/telos/loops/transactional/TransactionalListResponse.html">TransactionalListResponse</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

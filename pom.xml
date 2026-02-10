@@ -453,16 +453,102 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
                 <executions>
+                    <!-- Standard JavaDoc JAR for releases -->
                     <execution>
                         <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
+                    <!-- Generate documentation site -->
+                    <execution>
+                        <id>generate-docs-site</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/docs-site/api</outputDirectory>
+                            <reportOutputDirectory>${project.build.directory}/docs-site/api</reportOutputDirectory>
+
+                            <!-- Exclude internal packages -->
+                            <excludePackageNames>com.telos.loops.internal:com.telos.loops.internal.*</excludePackageNames>
+
+                            <!-- Custom styling and overview -->
+                            <stylesheetfile>${project.basedir}/docs/javadoc/stylesheet.css</stylesheetfile>
+                            <overview>${project.basedir}/docs/javadoc/overview.html</overview>
+
+                            <!-- Package grouping -->
+                            <groups>
+                                <group>
+                                    <title>Core Client</title>
+                                    <packages>com.telos.loops</packages>
+                                </group>
+                                <group>
+                                    <title>API Clients</title>
+                                    <packages>com.telos.loops.contacts:com.telos.loops.events:com.telos.loops.transactional:com.telos.loops.lists:com.telos.loops.properties:com.telos.loops.ips:com.telos.loops.apikey</packages>
+                                </group>
+                                <group>
+                                    <title>Models</title>
+                                    <packages>com.telos.loops.model</packages>
+                                </group>
+                                <group>
+                                    <title>Error Handling</title>
+                                    <packages>com.telos.loops.error</packages>
+                                </group>
+                                <group>
+                                    <title>Transport</title>
+                                    <packages>com.telos.loops.transport</packages>
+                                </group>
+                            </groups>
+
+                            <!-- Link to Java 21 docs -->
+                            <links>
+                                <link>https://docs.oracle.com/en/java/javase/21/docs/api/</link>
+                            </links>
+
+                            <!-- Enable source code linking -->
+                            <linksource>true</linksource>
+
+                            <!-- Documentation settings -->
+                            <doclint>none</doclint>
+                            <show>public</show>
+                            <nohelp>false</nohelp>
+                            <notimestamp>true</notimestamp>
+                            <windowtitle>Loops Java SDK ${project.version} API</windowtitle>
+                            <doctitle>Loops Java SDK ${project.version}</doctitle>
+                            <bottom><![CDATA[Copyright &#169; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.]]></bottom>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
                     <doclint>none</doclint>
                 </configuration>
+            </plugin>
+
+            <!-- Maven Resources Plugin (copy static site content) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-docs-site</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/docs-site</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/docs/site</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Source -->

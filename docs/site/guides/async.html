@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asynchronous Operations - Loops Java SDK</title>
+    <meta name="description" content="Learn how to use async operations with CompletableFuture in the Loops Java SDK">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+            <ul class="navbar-nav">
+                <li><a href="../getting-started.html">Getting Started</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-nav">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li>Async Operations</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Asynchronous Operations</h1>
+
+        <p>The Loops Java SDK provides full asynchronous support using Java's <code>CompletableFuture</code>. This guide shows you how to use async operations to improve performance and build non-blocking applications.</p>
+
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#basics">Async Basics</a></li>
+            <li><a href="#parallel-operations">Running Operations in Parallel</a></li>
+            <li><a href="#chaining">Chaining Operations</a></li>
+            <li><a href="#error-handling">Error Handling</a></li>
+            <li><a href="#batch-operations">Batch Operations</a></li>
+            <li><a href="#best-practices">Best Practices</a></li>
+        </ul>
+
+        <h2 id="basics">Async Basics</h2>
+
+        <h3>Basic Async Call</h3>
+
+        <p>Every synchronous method in the SDK has an async variant with the <code>Async</code> suffix that returns a <code>CompletableFuture</code>:</p>
+
+        <pre><code><span class="keyword">import</span> java.util.concurrent.CompletableFuture;
+<span class="keyword">import</span> com.telos.loops.contacts.ContactCreateRequest;
+<span class="keyword">import</span> com.telos.loops.contacts.ContactResponse;
+
+<span class="comment">// Sync version</span>
+<span class="keyword">ContactResponse</span> response = client.contacts().create(request);
+
+<span class="comment">// Async version</span>
+<span class="keyword">CompletableFuture&lt;ContactResponse&gt;</span> futureResponse =
+    client.contacts().createAsync(request);
+
+<span class="comment">// Wait for completion</span>
+<span class="keyword">ContactResponse</span> response = futureResponse.join();</code></pre>
+
+        <h3>Non-Blocking with Callbacks</h3>
+
+        <pre><code>client.contacts().createAsync(request)
+    .thenAccept(response -&gt; {
+        <span class="keyword">if</span> (response.success()) {
+            System.out.println(<span class="string">"Contact created: "</span> + response.id());
+        }
+    })
+    .exceptionally(error -&gt; {
+        System.err.println(<span class="string">"Failed to create contact: "</span> + error.getMessage());
+        <span class="keyword">return null</span>;
+    });</code></pre>
+
+        <h2 id="parallel-operations">Running Operations in Parallel</h2>
+
+        <h3>Create Multiple Contacts in Parallel</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.concurrent.CompletableFuture;
+
+<span class="keyword">List&lt;ContactCreateRequest&gt;</span> requests = List.of(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user1@example.com"</span>)
+        .firstName(<span class="string">"John"</span>)
+        .build(),
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user2@example.com"</span>)
+        .firstName(<span class="string">"Jane"</span>)
+        .build(),
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user3@example.com"</span>)
+        .firstName(<span class="string">"Bob"</span>)
+        .build()
+);
+
+<span class="comment">// Execute all requests in parallel</span>
+<span class="keyword">List&lt;CompletableFuture&lt;ContactResponse&gt;&gt;</span> futures = requests.stream()
+    .map(request -&gt; client.contacts().createAsync(request))
+    .toList();
+
+<span class="comment">// Wait for all to complete</span>
+<span class="keyword">CompletableFuture&lt;Void&gt;</span> allFutures = CompletableFuture.allOf(
+    futures.toArray(<span class="keyword">new</span> CompletableFuture[<span class="number">0</span>])
+);
+
+<span class="comment">// Get all results</span>
+allFutures.join();
+<span class="keyword">List&lt;ContactResponse&gt;</span> responses = futures.stream()
+    .map(CompletableFuture::join)
+    .toList();
+
+<span class="comment">// Process results</span>
+<span class="keyword">long</span> successCount = responses.stream()
+    .filter(ContactResponse::success)
+    .count();
+
+System.out.println(<span class="string">"Created "</span> + successCount + <span class="string">" contacts"</span>);</code></pre>
+
+        <h3>Send Multiple Events in Parallel</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.events.EventRequest;
+<span class="keyword">import</span> com.telos.loops.events.EventResponse;
+
+<span class="keyword">List&lt;String&gt;</span> userEmails = getUserEmails();
+
+<span class="keyword">List&lt;CompletableFuture&lt;EventResponse&gt;&gt;</span> eventFutures = userEmails.stream()
+    .map(email -&gt; EventRequest.builder()
+        .email(email)
+        .eventName(<span class="string">"campaign_launched"</span>)
+        .eventProperty(<span class="string">"campaignId"</span>, <span class="string">"camp_123"</span>)
+        .build()
+    )
+    .map(request -&gt; client.events().sendAsync(request))
+    .toList();
+
+<span class="comment">// Wait for all events to be sent</span>
+CompletableFuture.allOf(eventFutures.toArray(<span class="keyword">new</span> CompletableFuture[<span class="number">0</span>]))
+    .join();
+
+System.out.println(<span class="string">"Sent "</span> + eventFutures.size() + <span class="string">" events"</span>);</code></pre>
+
+        <h2 id="chaining">Chaining Operations</h2>
+
+        <h3>Sequential Async Operations</h3>
+
+        <pre><code><span class="comment">// Create contact, then send event, then send email</span>
+client.contacts().createAsync(contactRequest)
+    .thenCompose(contactResponse -&gt; {
+        <span class="keyword">if</span> (!contactResponse.success()) {
+            <span class="keyword">return</span> CompletableFuture.failedFuture(
+                <span class="keyword">new</span> RuntimeException(<span class="string">"Failed to create contact"</span>)
+            );
+        }
+
+        <span class="comment">// Send welcome event</span>
+        <span class="keyword">return</span> client.events().sendAsync(
+            EventRequest.builder()
+                .email(contactRequest.email())
+                .eventName(<span class="string">"user_created"</span>)
+                .build()
+        );
+    })
+    .thenCompose(eventResponse -&gt; {
+        <span class="keyword">if</span> (!eventResponse.success()) {
+            <span class="keyword">return</span> CompletableFuture.failedFuture(
+                <span class="keyword">new</span> RuntimeException(<span class="string">"Failed to send event"</span>)
+            );
+        }
+
+        <span class="comment">// Send welcome email</span>
+        <span class="keyword">return</span> client.transactional().sendAsync(
+            <span class="keyword">new</span> TransactionalSendRequest(
+                <span class="string">"transactional_welcome"</span>,
+                contactRequest.email(),
+                <span class="keyword">null</span>,
+                Map.of(<span class="string">"firstName"</span>, contactRequest.firstName()),
+                <span class="keyword">null</span>
+            )
+        );
+    })
+    .thenAccept(emailResponse -&gt; {
+        System.out.println(<span class="string">"Onboarding complete for "</span> + contactRequest.email());
+    })
+    .exceptionally(error -&gt; {
+        System.err.println(<span class="string">"Onboarding failed: "</span> + error.getMessage());
+        <span class="keyword">return null</span>;
+    });</code></pre>
+
+        <h3>Transform Results</h3>
+
+        <pre><code><span class="comment">// Find contact and extract custom property</span>
+<span class="keyword">CompletableFuture&lt;String&gt;</span> planFuture = client.contacts()
+    .findAsync(
+        ContactFindRequest.builder()
+            .email(<span class="string">"user@example.com"</span>)
+            .build()
+    )
+    .thenApply(contacts -&gt; {
+        <span class="keyword">if</span> (contacts.isEmpty()) {
+            <span class="keyword">return</span> <span class="string">"free"</span>;
+        }
+        <span class="keyword">Map&lt;String, Object&gt;</span> props = contacts.get(<span class="number">0</span>).customProperties();
+        <span class="keyword">return</span> (String) props.getOrDefault(<span class="string">"plan"</span>, <span class="string">"free"</span>);
+    });
+
+<span class="keyword">String</span> plan = planFuture.join();
+System.out.println(<span class="string">"User plan: "</span> + plan);</code></pre>
+
+        <h2 id="error-handling">Error Handling</h2>
+
+        <h3>Handle Exceptions with exceptionally</h3>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.error.LoopsApiException;
+<span class="keyword">import</span> com.telos.loops.error.RateLimitExceededException;
+
+client.contacts().createAsync(request)
+    .exceptionally(error -&gt; {
+        <span class="keyword">if</span> (error.getCause() <span class="keyword">instanceof</span> RateLimitExceededException) {
+            <span class="keyword">RateLimitExceededException</span> rle =
+                (RateLimitExceededException) error.getCause();
+            System.err.println(<span class="string">"Rate limited. Retry after "</span> +
+                rle.retryAfterSeconds() + <span class="string">" seconds"</span>);
+        } <span class="keyword">else if</span> (error.getCause() <span class="keyword">instanceof</span> LoopsApiException) {
+            <span class="keyword">LoopsApiException</span> lae = (LoopsApiException) error.getCause();
+            System.err.println(<span class="string">"API error (HTTP "</span> + lae.statusCode() +
+                <span class="string">"): "</span> + lae.getMessage());
+        } <span class="keyword">else</span> {
+            System.err.println(<span class="string">"Unexpected error: "</span> + error.getMessage());
+        }
+
+        <span class="comment">// Return a default response</span>
+        <span class="keyword">return</span> ContactResponse.builder()
+            .success(<span class="keyword">false</span>)
+            .message(<span class="string">"Failed: "</span> + error.getMessage())
+            .build();
+    })
+    .thenAccept(response -&gt; {
+        System.out.println(<span class="string">"Result: "</span> + response.success());
+    });</code></pre>
+
+        <h3>Handle Errors with handle</h3>
+
+        <pre><code>client.events().sendAsync(eventRequest)
+    .handle((response, error) -&gt; {
+        <span class="keyword">if</span> (error != <span class="keyword">null</span>) {
+            System.err.println(<span class="string">"Event send failed: "</span> + error.getMessage());
+            <span class="comment">// Log error, send to monitoring, etc.</span>
+            <span class="keyword">return</span> EventResponse.builder()
+                .success(<span class="keyword">false</span>)
+                .build();
+        }
+        <span class="keyword">return</span> response;
+    })
+    .thenAccept(response -&gt; {
+        <span class="keyword">if</span> (response.success()) {
+            System.out.println(<span class="string">"Event sent successfully"</span>);
+        }
+    });</code></pre>
+
+        <h3>Retry Logic with Async</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.concurrent.TimeUnit;
+
+<span class="keyword">public CompletableFuture&lt;ContactResponse&gt;</span> createContactWithRetry(
+    <span class="keyword">ContactCreateRequest</span> request,
+    <span class="keyword">int</span> maxRetries
+) {
+    <span class="keyword">return</span> client.contacts().createAsync(request)
+        .exceptionallyCompose(error -&gt; {
+            <span class="keyword">if</span> (error.getCause() <span class="keyword">instanceof</span> RateLimitExceededException &&
+                maxRetries &gt; <span class="number">0</span>) {
+
+                <span class="keyword">RateLimitExceededException</span> rle =
+                    (RateLimitExceededException) error.getCause();
+
+                <span class="keyword">long</span> delaySeconds = rle.retryAfterSeconds();
+                System.out.println(<span class="string">"Rate limited, retrying in "</span> +
+                    delaySeconds + <span class="string">" seconds..."</span>);
+
+                <span class="comment">// Wait and retry</span>
+                <span class="keyword">return</span> CompletableFuture
+                    .delayedExecutor(delaySeconds, TimeUnit.SECONDS)
+                    .execute(() -&gt; {})
+                    .thenCompose(v -&gt; createContactWithRetry(
+                        request,
+                        maxRetries - <span class="number">1</span>
+                    ));
+            }
+
+            <span class="comment">// No more retries or different error</span>
+            <span class="keyword">return</span> CompletableFuture.failedFuture(error);
+        });
+}</code></pre>
+
+        <h2 id="batch-operations">Batch Operations</h2>
+
+        <h3>Batch Create Contacts</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.stream.Collectors;
+
+<span class="keyword">public CompletableFuture&lt;List&lt;ContactResponse&gt;&gt;</span> batchCreateContacts(
+    <span class="keyword">List&lt;ContactCreateRequest&gt;</span> requests
+) {
+    <span class="comment">// Create all contacts in parallel</span>
+    <span class="keyword">List&lt;CompletableFuture&lt;ContactResponse&gt;&gt;</span> futures = requests.stream()
+        .map(request -&gt; client.contacts().createAsync(request))
+        .toList();
+
+    <span class="comment">// Combine all futures into one</span>
+    <span class="keyword">return</span> CompletableFuture.allOf(futures.toArray(<span class="keyword">new</span> CompletableFuture[<span class="number">0</span>]))
+        .thenApply(v -&gt; futures.stream()
+            .map(CompletableFuture::join)
+            .collect(Collectors.toList())
+        );
+}
+
+<span class="comment">// Usage</span>
+batchCreateContacts(contactRequests)
+    .thenAccept(responses -&gt; {
+        <span class="keyword">long</span> successful = responses.stream()
+            .filter(ContactResponse::success)
+            .count();
+        System.out.println(<span class="string">"Created "</span> + successful + <span class="string">" out of "</span> +
+            responses.size() + <span class="string">" contacts"</span>);
+    });</code></pre>
+
+        <h3>Batch with Individual Error Handling</h3>
+
+        <pre><code><span class="keyword">public CompletableFuture&lt;List&lt;ContactResponse&gt;&gt;</span> batchCreateContactsSafe(
+    <span class="keyword">List&lt;ContactCreateRequest&gt;</span> requests
+) {
+    <span class="keyword">List&lt;CompletableFuture&lt;ContactResponse&gt;&gt;</span> futures = requests.stream()
+        .map(request -&gt;
+            client.contacts().createAsync(request)
+                .exceptionally(error -&gt; {
+                    <span class="comment">// Log error but don't fail the entire batch</span>
+                    System.err.println(<span class="string">"Failed to create contact "</span> +
+                        request.email() + <span class="string">": "</span> + error.getMessage());
+
+                    <span class="keyword">return</span> ContactResponse.builder()
+                        .success(<span class="keyword">false</span>)
+                        .message(error.getMessage())
+                        .build();
+                })
+        )
+        .toList();
+
+    <span class="keyword">return</span> CompletableFuture.allOf(futures.toArray(<span class="keyword">new</span> CompletableFuture[<span class="number">0</span>]))
+        .thenApply(v -&gt; futures.stream()
+            .map(CompletableFuture::join)
+            .toList()
+        );
+}</code></pre>
+
+        <h3>Controlled Parallelism</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.concurrent.Semaphore;
+
+<span class="keyword">public CompletableFuture&lt;List&lt;EventResponse&gt;&gt;</span> sendEventsBatched(
+    <span class="keyword">List&lt;EventRequest&gt;</span> requests,
+    <span class="keyword">int</span> maxConcurrent
+) {
+    <span class="keyword">Semaphore</span> semaphore = <span class="keyword">new</span> Semaphore(maxConcurrent);
+
+    <span class="keyword">List&lt;CompletableFuture&lt;EventResponse&gt;&gt;</span> futures = requests.stream()
+        .map(request -&gt; CompletableFuture.runAsync(() -&gt; {
+            <span class="keyword">try</span> {
+                semaphore.acquire();
+            } <span class="keyword">catch</span> (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                <span class="keyword">throw new</span> RuntimeException(e);
+            }
+        })
+        .thenCompose(v -&gt; client.events().sendAsync(request))
+        .whenComplete((response, error) -&gt; semaphore.release()))
+        .toList();
+
+    <span class="keyword">return</span> CompletableFuture.allOf(futures.toArray(<span class="keyword">new</span> CompletableFuture[<span class="number">0</span>]))
+        .thenApply(v -&gt; futures.stream()
+            .map(CompletableFuture::join)
+            .toList()
+        );
+}
+
+<span class="comment">// Send events with max 10 concurrent requests</span>
+sendEventsBatched(eventRequests, <span class="number">10</span>)
+    .thenAccept(responses -&gt; {
+        System.out.println(<span class="string">"Sent "</span> + responses.size() + <span class="string">" events"</span>);
+    });</code></pre>
+
+        <h2 id="best-practices">Best Practices</h2>
+
+        <div class="alert alert-success">
+            <h4>Use Async for Batch Operations</h4>
+            <p>When performing multiple independent operations (creating contacts, sending events), use async methods to execute them in parallel for significantly better performance.</p>
+        </div>
+
+        <div class="alert alert-info">
+            <h4>Handle Errors Gracefully</h4>
+            <p>Always use <code>exceptionally</code> or <code>handle</code> to manage errors in async chains. Unhandled exceptions in CompletableFutures can lead to silent failures.</p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Avoid Blocking</h4>
+            <p>Don't use <code>.join()</code> or <code>.get()</code> in production code unless necessary. Use callback methods like <code>thenAccept</code> and <code>thenCompose</code> to maintain non-blocking behavior.</p>
+        </div>
+
+        <div class="alert alert-info">
+            <h4>Control Concurrency</h4>
+            <p>When processing large batches, control the level of parallelism to avoid overwhelming the API or exhausting system resources. Use semaphores or partition your work into smaller batches.</p>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>Thread Pool Management</h4>
+            <p>The SDK uses the default ForkJoinPool for async operations. For applications with specific threading requirements, consider providing a custom executor via <code>CompletableFuture.supplyAsync(supplier, executor)</code>.</p>
+        </div>
+
+        <h2>Common Patterns</h2>
+
+        <h3>Fan-out, Fan-in Pattern</h3>
+
+        <pre><code><span class="comment">// Start multiple async operations and combine results</span>
+<span class="keyword">CompletableFuture&lt;List&lt;Contact&gt;&gt;</span> contactsFuture =
+    client.contacts().findAsync(findRequest);
+
+<span class="keyword">CompletableFuture&lt;TransactionalListResponse&gt;</span> emailsFuture =
+    client.transactional().listAsync();
+
+<span class="keyword">CompletableFuture&lt;CustomPropertyResponse&gt;</span> propertiesFuture =
+    client.customProperties().listAsync();
+
+<span class="comment">// Wait for all and combine</span>
+CompletableFuture.allOf(contactsFuture, emailsFuture, propertiesFuture)
+    .thenAccept(v -&gt; {
+        <span class="keyword">List&lt;Contact&gt;</span> contacts = contactsFuture.join();
+        <span class="keyword">TransactionalListResponse</span> emails = emailsFuture.join();
+        <span class="keyword">CustomPropertyResponse</span> properties = propertiesFuture.join();
+
+        <span class="comment">// Process combined data</span>
+        generateReport(contacts, emails, properties);
+    });</code></pre>
+
+        <h3>Timeout Handling</h3>
+
+        <pre><code><span class="keyword">import</span> java.util.concurrent.TimeUnit;
+<span class="keyword">import</span> java.util.concurrent.TimeoutException;
+
+client.contacts().createAsync(request)
+    .orTimeout(<span class="number">10</span>, TimeUnit.SECONDS)
+    .exceptionally(error -&gt; {
+        <span class="keyword">if</span> (error.getCause() <span class="keyword">instanceof</span> TimeoutException) {
+            System.err.println(<span class="string">"Request timed out after 10 seconds"</span>);
+        }
+        <span class="keyword">return null</span>;
+    });</code></pre>
+
+        <h2>Related Guides</h2>
+
+        <ul>
+            <li><a href="contacts.html">Working with Contacts</a> - Batch contact operations</li>
+            <li><a href="events.html">Sending Events</a> - Batch event sending</li>
+            <li><a href="transactional.html">Transactional Emails</a> - Async email sending</li>
+            <li><a href="error-handling.html">Error Handling</a> - Managing errors in async code</li>
+        </ul>
+
+        <h2>API Reference</h2>
+
+        <p>All client classes provide async variants of their methods. See the JavaDoc for:</p>
+        <ul>
+            <li><a href="../api/com/telos/loops/contacts/ContactsClient.html">ContactsClient</a></li>
+            <li><a href="../api/com/telos/loops/events/EventsClient.html">EventsClient</a></li>
+            <li><a href="../api/com/telos/loops/transactional/TransactionalClient.html">TransactionalClient</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loops Java SDK - Type-Safe Java Client for Loops.so</title>
+    <meta name="description" content="A modern, type-safe Java SDK for the Loops.so API with full async support">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">Loops Java SDK</a>
+            <ul class="navbar-nav">
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="guides/contacts.html">Guides</a></li>
+                <li><a href="examples/index.html">Examples</a></li>
+                <li><a href="api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Loops Java SDK</h1>
+            <p>A modern, type-safe Java client for the Loops.so API with full async support</p>
+            <div class="hero-buttons">
+                <a href="getting-started.html" class="btn btn-primary">Get Started</a>
+                <a href="api/index.html" class="btn btn-secondary">API Reference</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <div class="content">
+        <h2>Quick Start</h2>
+        <pre><code><span class="comment">// Initialize the client</span>
+<span class="keyword">LoopsClient</span> client = LoopsClient.builder()
+        .apiKey(<span class="string">"your-api-key"</span>)
+        .build();
+
+<span class="comment">// Create a contact</span>
+<span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"John"</span>)
+        .lastName(<span class="string">"Doe"</span>)
+        .build()
+);
+
+<span class="comment">// Send an event</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"signed_up"</span>)
+        .build()
+);
+
+<span class="comment">// Send a transactional email</span>
+client.transactional().send(
+    TransactionalRequest.builder()
+        .transactionalId(<span class="string">"welcome_email"</span>)
+        .email(<span class="string">"user@example.com"</span>)
+        .build()
+);</code></pre>
+    </div>
+
+    <!-- Features -->
+    <div class="container">
+        <h2 class="text-center">Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Full API Coverage</h3>
+                <p>Complete support for all Loops.so API endpoints including contacts, events, transactional emails, mailing lists, and custom properties.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Async Support</h3>
+                <p>All operations available in both synchronous and asynchronous (CompletableFuture) variants for maximum flexibility.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Type-Safe</h3>
+                <p>Built with Java 21+ records for immutable, type-safe data models that catch errors at compile time.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Resilient</h3>
+                <p>Built-in retry logic for rate limiting with exponential backoff, ensuring reliable API communication.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Modern Java</h3>
+                <p>Leverages modern Java features including records, sealed classes, and pattern matching for clean, maintainable code.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Well Documented</h3>
+                <p>Comprehensive JavaDoc, usage guides, and runnable examples to get you started quickly.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Installation -->
+    <div class="content">
+        <h2>Installation</h2>
+
+        <h3>Maven</h3>
+        <pre><code><span class="keyword">&lt;dependency&gt;</span>
+    &lt;groupId&gt;com.telos&lt;/groupId&gt;
+    &lt;artifactId&gt;loops-java-sdk&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+<span class="keyword">&lt;/dependency&gt;</span></code></pre>
+
+        <h3>Gradle</h3>
+        <pre><code>implementation <span class="string">'com.telos:loops-java-sdk:1.0.0'</span></code></pre>
+
+        <h3>Requirements</h3>
+        <ul>
+            <li>Java 21 or higher</li>
+            <li>Maven 3.8+ or Gradle 7.0+</li>
+            <li>Loops.so API key</li>
+        </ul>
+    </div>
+
+    <!-- Documentation Links -->
+    <div class="content">
+        <h2>Documentation</h2>
+        <div class="guide-nav">
+            <h3>Getting Started</h3>
+            <ul>
+                <li><a href="getting-started.html">Installation & Setup →</a></li>
+                <li><a href="getting-started.html#basic-usage">Basic Usage →</a></li>
+            </ul>
+        </div>
+
+        <div class="guide-nav">
+            <h3>Usage Guides</h3>
+            <ul>
+                <li><a href="guides/contacts.html">Working with Contacts →</a></li>
+                <li><a href="guides/events.html">Sending Events →</a></li>
+                <li><a href="guides/transactional.html">Transactional Emails →</a></li>
+                <li><a href="guides/async.html">Asynchronous Operations →</a></li>
+                <li><a href="guides/error-handling.html">Error Handling →</a></li>
+            </ul>
+        </div>
+
+        <div class="guide-nav">
+            <h3>Reference</h3>
+            <ul>
+                <li><a href="api/index.html">API Documentation (JavaDoc) →</a></li>
+                <li><a href="examples/index.html">Code Examples →</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub Repository →</a></li>
+                <li><a href="https://loops.so/docs" target="_blank">Loops.so API Docs →</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Examples Preview -->
+    <div class="content">
+        <h2>Common Use Cases</h2>
+
+        <h3>Create and Update Contacts</h3>
+        <pre><code><span class="comment">// Create a new contact</span>
+<span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"Jane"</span>)
+        .customProperty(<span class="string">"plan"</span>, <span class="string">"premium"</span>)
+        .build()
+);
+
+<span class="comment">// Update an existing contact</span>
+client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .customProperty(<span class="string">"lastLogin"</span>, LocalDateTime.now().toString())
+        .build()
+);</code></pre>
+
+        <h3>Send Events with Data</h3>
+        <pre><code><span class="comment">// Send an event with custom properties</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"purchase_completed"</span>)
+        .eventProperty(<span class="string">"amount"</span>, <span class="number">99.99</span>)
+        .eventProperty(<span class="string">"product"</span>, <span class="string">"Premium Plan"</span>)
+        .build()
+);</code></pre>
+
+        <h3>Asynchronous Operations</h3>
+        <pre><code><span class="comment">// Run multiple operations in parallel</span>
+<span class="keyword">CompletableFuture&lt;ContactResponse&gt;</span> createContact =
+    client.contacts().createAsync(contactRequest);
+
+<span class="keyword">CompletableFuture&lt;EventResponse&gt;</span> sendEvent =
+    client.events().sendAsync(eventRequest);
+
+<span class="comment">// Wait for both to complete</span>
+CompletableFuture.allOf(createContact, sendEvent)
+    .thenRun(() -&gt; System.out.println(<span class="string">"All operations completed"</span>))
+    .join();</code></pre>
+
+        <p class="mt-3">
+            <a href="examples/index.html">View all examples →</a>
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

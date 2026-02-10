@@ -5,6 +5,25 @@ import com.telos.loops.error.LoopsValidationException;
 import jakarta.annotation.Nonnull;
 import java.util.regex.Pattern;
 
+/**
+ * Request to create a new custom contact property in Loops.
+ *
+ * <p>Custom properties must be defined before they can be used on contacts. The property name must
+ * be in camelCase format, and the type must be one of: "string", "number", "boolean", or "date".
+ *
+ * <p>Example usage:
+ *
+ * <pre>{@code
+ * ContactPropertyCreateRequest request = new ContactPropertyCreateRequest(
+ *     "planName",  // name (must be camelCase)
+ *     "string"     // type (string, number, boolean, or date)
+ * );
+ * }</pre>
+ *
+ * @param name the property name in camelCase format (e.g., "planName", "signupDate")
+ * @param type the data type: "string", "number", "boolean", or "date"
+ * @throws LoopsValidationException if name is not in camelCase format or type is invalid
+ */
 @JsonIgnoreProperties(ignoreUnknown = false)
 public record ContactPropertyCreateRequest(@Nonnull String name, @Nonnull String type) {
 

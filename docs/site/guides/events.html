@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sending Events - Loops Java SDK</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="navbar-brand">Loops Java SDK</a>
+            <ul class="navbar-nav">
+                <li><a href="../getting-started.html">Getting Started</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-nav">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="contacts.html">Guides</a></li>
+                <li>Events</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Sending Events</h1>
+
+        <p>Events track user activity and trigger automated email campaigns in Loops. This guide covers how to send events using the Java SDK.</p>
+
+        <h2>Basic Event Sending</h2>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.events.EventRequest;
+<span class="keyword">import</span> com.telos.loops.events.EventResponse;
+
+<span class="keyword">EventResponse</span> response = client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"signed_up"</span>)
+        .build()
+);
+
+<span class="keyword">if</span> (response.success()) {
+    System.out.println(<span class="string">"Event sent successfully"</span>);
+}</code></pre>
+
+        <h2>Events with Properties</h2>
+
+        <p>Include additional data with your events:</p>
+
+        <pre><code><span class="keyword">EventResponse</span> response = client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"purchase_completed"</span>)
+        .eventProperty(<span class="string">"amount"</span>, <span class="number">99.99</span>)
+        .eventProperty(<span class="string">"product"</span>, <span class="string">"Premium Plan"</span>)
+        .eventProperty(<span class="string">"currency"</span>, <span class="string">"USD"</span>)
+        .eventProperty(<span class="string">"quantity"</span>, <span class="number">1</span>)
+        .build()
+);</code></pre>
+
+        <h2>Using User ID</h2>
+
+        <p>Send events using userId instead of email:</p>
+
+        <pre><code><span class="keyword">EventResponse</span> response = client.events().send(
+    EventRequest.builder()
+        .userId(<span class="string">"user_12345"</span>)
+        .eventName(<span class="string">"feature_used"</span>)
+        .eventProperty(<span class="string">"feature"</span>, <span class="string">"export"</span>)
+        .build()
+);</code></pre>
+
+        <h2>Idempotency</h2>
+
+        <p>Events are idempotent by default within a 24-hour window. The same event (same email/userId and eventName) sent multiple times will only trigger automations once per day.</p>
+
+        <div class="alert alert-info">
+            <h4>Event Deduplication</h4>
+            <p>Loops automatically deduplicates events based on email/userId and eventName within a 24-hour period. This prevents duplicate email sends if an event is accidentally sent multiple times.</p>
+        </div>
+
+        <h2>Common Event Types</h2>
+
+        <h3>User Lifecycle Events</h3>
+
+        <pre><code><span class="comment">// User signup</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"signed_up"</span>)
+        .eventProperty(<span class="string">"source"</span>, <span class="string">"landing_page"</span>)
+        .build()
+);
+
+<span class="comment">// Email verified</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"email_verified"</span>)
+        .build()
+);
+
+<span class="comment">// Account upgraded</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"account_upgraded"</span>)
+        .eventProperty(<span class="string">"from_plan"</span>, <span class="string">"free"</span>)
+        .eventProperty(<span class="string">"to_plan"</span>, <span class="string">"premium"</span>)
+        .build()
+);</code></pre>
+
+        <h3>Engagement Events</h3>
+
+        <pre><code><span class="comment">// Feature usage</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"feature_used"</span>)
+        .eventProperty(<span class="string">"feature_name"</span>, <span class="string">"advanced_analytics"</span>)
+        .eventProperty(<span class="string">"usage_count"</span>, <span class="number">1</span>)
+        .build()
+);
+
+<span class="comment">// Content interaction</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"article_read"</span>)
+        .eventProperty(<span class="string">"article_id"</span>, <span class="string">"123"</span>)
+        .eventProperty(<span class="string">"reading_time_seconds"</span>, <span class="number">180</span>)
+        .build()
+);</code></pre>
+
+        <h3>Transaction Events</h3>
+
+        <pre><code><span class="comment">// Purchase</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"purchase_completed"</span>)
+        .eventProperty(<span class="string">"order_id"</span>, <span class="string">"ORD-12345"</span>)
+        .eventProperty(<span class="string">"amount"</span>, <span class="number">149.99</span>)
+        .eventProperty(<span class="string">"currency"</span>, <span class="string">"USD"</span>)
+        .build()
+);
+
+<span class="comment">// Subscription renewal</span>
+client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"subscription_renewed"</span>)
+        .eventProperty(<span class="string">"plan"</span>, <span class="string">"premium"</span>)
+        .eventProperty(<span class="string">"amount"</span>, <span class="number">29.99</span>)
+        .eventProperty(<span class="string">"next_billing_date"</span>, <span class="string">"2026-03-10"</span>)
+        .build()
+);</code></pre>
+
+        <h2>Error Handling</h2>
+
+        <pre><code><span class="keyword">try</span> {
+    <span class="keyword">EventResponse</span> response = client.events().send(request);
+    <span class="keyword">if</span> (response.success()) {
+        System.out.println(<span class="string">"Event sent"</span>);
+    }
+} <span class="keyword">catch</span> (LoopsValidationException e) {
+    <span class="comment">// Invalid event name or missing required fields</span>
+    System.err.println(<span class="string">"Validation error: "</span> + e.getMessage());
+} <span class="keyword">catch</span> (LoopsApiException e) {
+    <span class="comment">// API error</span>
+    System.err.println(<span class="string">"API error: "</span> + e.getMessage());
+}</code></pre>
+
+        <h2>Best Practices</h2>
+
+        <div class="alert alert-info">
+            <h4>Event Naming</h4>
+            <p>Use descriptive, action-based event names in snake_case (e.g., "user_signed_up", "purchase_completed"). Events must be defined in your Loops dashboard before sending.</p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Event Properties</h4>
+            <p>Keep event properties relevant and minimal. Only include data that will be used in your email campaigns or for segmentation.</p>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>Performance</h4>
+            <p>For sending multiple events, use async methods to improve performance. See the <a href="async.html">Async Guide</a>.</p>
+        </div>
+
+        <h2>Related Guides</h2>
+
+        <ul>
+            <li><a href="contacts.html">Working with Contacts</a> - Manage contact data</li>
+            <li><a href="async.html">Asynchronous Operations</a> - Send events in parallel</li>
+            <li><a href="error-handling.html">Error Handling</a> - Handle API errors</li>
+        </ul>
+
+        <h2>API Reference</h2>
+
+        <ul>
+            <li><a href="../api/com/telos/loops/events/EventsClient.html">EventsClient JavaDoc</a></li>
+            <li><a href="../api/com/telos/loops/events/EventRequest.html">EventRequest</a></li>
+            <li><a href="../api/com/telos/loops/events/EventResponse.html">EventResponse</a></li>
+        </ul>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

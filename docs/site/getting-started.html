@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - Loops Java SDK</title>
+    <meta name="description" content="Get started with the Loops Java SDK - installation, setup, and basic usage">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">Loops Java SDK</a>
+            <ul class="navbar-nav">
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="guides/contacts.html">Guides</a></li>
+                <li><a href="examples/index.html">Examples</a></li>
+                <li><a href="api/index.html">API Reference</a></li>
+                <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-nav">
+                <li><a href="index.html">Home</a></li>
+                <li>Getting Started</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Getting Started</h1>
+
+        <p>This guide will help you install and start using the Loops Java SDK in your project.</p>
+
+        <h2>Prerequisites</h2>
+
+        <p>Before you begin, ensure you have:</p>
+
+        <ul>
+            <li><strong>Java 21 or higher</strong> installed on your system</li>
+            <li><strong>Maven 3.8+</strong> or <strong>Gradle 7.0+</strong> for dependency management</li>
+            <li>A <strong>Loops.so account</strong> with an API key</li>
+        </ul>
+
+        <div class="alert alert-info">
+            <strong>Getting an API Key:</strong> Log in to your Loops.so dashboard and navigate to Settings → API Keys to generate your API key.
+        </div>
+
+        <h2>Installation</h2>
+
+        <h3>Maven</h3>
+
+        <p>Add the following dependency to your <code>pom.xml</code>:</p>
+
+        <pre><code><span class="keyword">&lt;dependency&gt;</span>
+    &lt;groupId&gt;com.telos&lt;/groupId&gt;
+    &lt;artifactId&gt;loops-java-sdk&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+<span class="keyword">&lt;/dependency&gt;</span></code></pre>
+
+        <h3>Gradle (Kotlin DSL)</h3>
+
+        <p>Add the following to your <code>build.gradle.kts</code>:</p>
+
+        <pre><code>implementation(<span class="string">"com.telos:loops-java-sdk:1.0.0"</span>)</code></pre>
+
+        <h3>Gradle (Groovy)</h3>
+
+        <p>Add the following to your <code>build.gradle</code>:</p>
+
+        <pre><code>implementation <span class="string">'com.telos:loops-java-sdk:1.0.0'</span></code></pre>
+
+        <h2 id="basic-usage">Basic Usage</h2>
+
+        <h3>Initialize the Client</h3>
+
+        <p>Create a <code>LoopsClient</code> instance with your API key:</p>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.LoopsClient;
+
+<span class="keyword">public class</span> <span class="function">Example</span> {
+    <span class="keyword">public static void</span> <span class="function">main</span>(String[] args) {
+        <span class="comment">// Initialize the client</span>
+        <span class="keyword">LoopsClient</span> client = LoopsClient.builder()
+                .apiKey(<span class="string">"your-api-key-here"</span>)
+                .build();
+
+        <span class="comment">// Use the client...</span>
+    }
+}</code></pre>
+
+        <div class="alert alert-warning">
+            <strong>Security Note:</strong> Never hardcode your API key in source code. Use environment variables or a secure configuration management system.
+        </div>
+
+        <h3>Using Environment Variables</h3>
+
+        <p>It's recommended to store your API key in an environment variable:</p>
+
+        <pre><code><span class="keyword">LoopsClient</span> client = LoopsClient.builder()
+        .apiKey(System.getenv(<span class="string">"LOOPS_API_KEY"</span>))
+        .build();</code></pre>
+
+        <p>Set the environment variable before running your application:</p>
+
+        <pre><code><span class="comment"># Linux/macOS</span>
+export LOOPS_API_KEY=your-api-key-here
+
+<span class="comment"># Windows (Command Prompt)</span>
+set LOOPS_API_KEY=your-api-key-here
+
+<span class="comment"># Windows (PowerShell)</span>
+$env:LOOPS_API_KEY = <span class="string">"your-api-key-here"</span></code></pre>
+
+        <h3>Creating a Contact</h3>
+
+        <p>Create a new contact in Loops:</p>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.contacts.ContactCreateRequest;
+<span class="keyword">import</span> com.telos.loops.contacts.ContactResponse;
+
+<span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"John"</span>)
+        .lastName(<span class="string">"Doe"</span>)
+        .build()
+);
+
+<span class="keyword">if</span> (response.success()) {
+    System.out.println(<span class="string">"Contact created with ID: "</span> + response.id());
+} <span class="keyword">else</span> {
+    System.out.println(<span class="string">"Failed to create contact"</span>);
+}</code></pre>
+
+        <h3>Sending an Event</h3>
+
+        <p>Send an event to track user activity:</p>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.events.EventRequest;
+<span class="keyword">import</span> com.telos.loops.events.EventResponse;
+
+<span class="keyword">EventResponse</span> eventResponse = client.events().send(
+    EventRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .eventName(<span class="string">"signed_up"</span>)
+        .build()
+);
+
+<span class="keyword">if</span> (eventResponse.success()) {
+    System.out.println(<span class="string">"Event sent successfully"</span>);
+}</code></pre>
+
+        <h3>Sending a Transactional Email</h3>
+
+        <p>Send a transactional email using a template:</p>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.transactional.TransactionalRequest;
+<span class="keyword">import</span> com.telos.loops.transactional.TransactionalResponse;
+
+<span class="keyword">TransactionalResponse</span> emailResponse = client.transactional().send(
+    TransactionalRequest.builder()
+        .transactionalId(<span class="string">"welcome_email"</span>)
+        .email(<span class="string">"user@example.com"</span>)
+        .dataVariable(<span class="string">"username"</span>, <span class="string">"John"</span>)
+        .build()
+);
+
+<span class="keyword">if</span> (emailResponse.success()) {
+    System.out.println(<span class="string">"Email sent successfully"</span>);
+}</code></pre>
+
+        <h2>Working with Custom Properties</h2>
+
+        <p>You can add custom properties when creating or updating contacts:</p>
+
+        <pre><code><span class="keyword">ContactResponse</span> response = client.contacts().create(
+    ContactCreateRequest.builder()
+        .email(<span class="string">"user@example.com"</span>)
+        .firstName(<span class="string">"Jane"</span>)
+        .customProperty(<span class="string">"plan"</span>, <span class="string">"premium"</span>)
+        .customProperty(<span class="string">"signupDate"</span>, <span class="string">"2026-02-10"</span>)
+        .customProperty(<span class="string">"lifetimeValue"</span>, <span class="number">299.99</span>)
+        .build()
+);</code></pre>
+
+        <h2>Error Handling</h2>
+
+        <p>The SDK throws specific exceptions for different error scenarios:</p>
+
+        <pre><code><span class="keyword">import</span> com.telos.loops.error.LoopsApiException;
+<span class="keyword">import</span> com.telos.loops.error.LoopsValidationException;
+<span class="keyword">import</span> com.telos.loops.error.RateLimitExceededException;
+
+<span class="keyword">try</span> {
+    <span class="keyword">ContactResponse</span> response = client.contacts().create(request);
+} <span class="keyword">catch</span> (LoopsValidationException e) {
+    <span class="comment">// Handle validation errors (invalid email, missing required fields, etc.)</span>
+    System.err.println(<span class="string">"Validation error: "</span> + e.getMessage());
+} <span class="keyword">catch</span> (RateLimitExceededException e) {
+    <span class="comment">// Handle rate limiting (SDK automatically retries, but you can add custom logic)</span>
+    System.err.println(<span class="string">"Rate limit exceeded: "</span> + e.getMessage());
+} <span class="keyword">catch</span> (LoopsApiException e) {
+    <span class="comment">// Handle other API errors</span>
+    System.err.println(<span class="string">"API error: "</span> + e.getMessage());
+}</code></pre>
+
+        <div class="alert alert-info">
+            <strong>Automatic Retry:</strong> The SDK automatically retries requests that fail due to rate limiting with exponential backoff.
+        </div>
+
+        <h2>Asynchronous Operations</h2>
+
+        <p>All operations have asynchronous variants that return <code>CompletableFuture</code>:</p>
+
+        <pre><code><span class="keyword">import</span> java.util.concurrent.CompletableFuture;
+
+<span class="comment">// Asynchronous contact creation</span>
+<span class="keyword">CompletableFuture&lt;ContactResponse&gt;</span> futureResponse =
+    client.contacts().createAsync(request);
+
+<span class="comment">// Handle the result when it completes</span>
+futureResponse.thenAccept(response -&gt; {
+    System.out.println(<span class="string">"Contact created: "</span> + response.id());
+}).exceptionally(throwable -&gt; {
+    System.err.println(<span class="string">"Error: "</span> + throwable.getMessage());
+    <span class="keyword">return null</span>;
+});</code></pre>
+
+        <p>Learn more about asynchronous operations in the <a href="guides/async.html">Async Guide</a>.</p>
+
+        <h2>Next Steps</h2>
+
+        <p>Now that you have the basics, explore these resources:</p>
+
+        <div class="guide-nav">
+            <h3>Usage Guides</h3>
+            <ul>
+                <li><a href="guides/contacts.html">Working with Contacts →</a></li>
+                <li><a href="guides/events.html">Sending Events →</a></li>
+                <li><a href="guides/transactional.html">Transactional Emails →</a></li>
+                <li><a href="guides/async.html">Asynchronous Operations →</a></li>
+                <li><a href="guides/error-handling.html">Error Handling →</a></li>
+            </ul>
+        </div>
+
+        <div class="guide-nav mt-3">
+            <h3>Reference</h3>
+            <ul>
+                <li><a href="api/index.html">API Documentation (JavaDoc) →</a></li>
+                <li><a href="examples/index.html">Code Examples →</a></li>
+            </ul>
+        </div>
+
+        <h2>Need Help?</h2>
+
+        <ul>
+            <li>Check the <a href="api/index.html">API Reference</a> for detailed documentation</li>
+            <li>Browse <a href="examples/index.html">code examples</a> for common use cases</li>
+            <li>Report issues on <a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">GitHub</a></li>
+            <li>Refer to the <a href="https://loops.so/docs" target="_blank">Loops.so API documentation</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2026 Telos Development. Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/telosnath/loops-java-sdk" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/telosnath/loops-java-sdk/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://loops.so" target="_blank">Loops.so</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
