@@ -1,7 +1,11 @@
 # Loops Java SDK
 
-![CI](https://github.com/telos/loops-java-sdk/actions/workflows/ci.yml/badge.svg)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
+[![Build Status](https://github.com/telos-tech/loops-java-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/telos-tech/loops-java-sdk/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/telos-tech/loops-java-sdk/graph/badge.svg?token=CODECOV_TOKEN)](https://codecov.io/gh/telos-tech/loops-java-sdk)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.telos-tech/loops-java-sdk)](https://central.sonatype.com/artifact/io.github.telos-tech/loops-java-sdk)
+[![License](https://img.shields.io/github/license/telos-tech/loops-java-sdk)](LICENSE)
+![Java](https://img.shields.io/badge/Java-21%2B-blue)
+[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://telos-tech.github.io/loops-java-sdk/)
 
 A robust, type-safe Java SDK for the [Loops.so](https://loops.so) API.
 
@@ -21,7 +25,7 @@ Add the dependency to your `pom.xml`:
 <dependency>
     <groupId>com.telos</groupId>
     <artifactId>loops-java-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>${loops-java-sdk.version}</version>
 </dependency>
 ```
 
@@ -32,48 +36,106 @@ Add the dependency to your `pom.xml`:
 - 📖 [Usage Guides](https://telos-tech.github.io/loops-java-sdk/guides/contacts.html)
 - 💡 [Code Examples](https://telos-tech.github.io/loops-java-sdk/examples/)
 
-## Quick Start
+## Usage
+
+Initialize the client with your API key:
 
 ```java
 import com.telos.loops.LoopsClient;
-import com.telos.loops.contacts.ContactCreateRequest;
-import com.telos.loops.events.EventRequest;
-import com.telos.loops.transactional.TransactionalRequest;
 
-public class App {
-    public static void main(String[] args) {
-        // Initialize the client
-        LoopsClient client = LoopsClient.builder()
-                .apiKey("your-api-key")
-                .build();
-
-        // Create a contact
-        client.contacts().create(
-            ContactCreateRequest.builder()
-                .email("user@example.com")
-                .firstName("John")
-                .lastName("Doe")
-                .build()
-        );
-
-        // Send an event
-        client.events().send(
-            EventRequest.builder()
-                .email("user@example.com")
-                .eventName("signed_up")
-                .build()
-        );
-
-        // Send a transactional email
-        client.transactional().send(
-            TransactionalRequest.builder()
-                .transactionalId("welcome_email")
-                .email("user@example.com")
-                .build()
-        );
-    }
-}
+LoopsClient client = LoopsClient.builder()
+    .apiKey("your-api-key")
+    .build();
 ```
+
+### Contacts
+
+Create a new contact:
+
+```java
+import com.telos.loops.contacts.ContactCreateRequest;
+
+client.contacts().create(
+    ContactCreateRequest.builder()
+        .email("neil.armstrong@moon.space")
+        .firstName("Neil")
+        .lastName("Armstrong")
+        .userGroup("Astronauts")
+        .subscribed(true)
+        .putAdditionalProperty("role", "Astronaut")
+        .build()
+);
+```
+
+Find a contact:
+
+```java
+import com.telos.loops.contacts.ContactFindRequest;
+
+var contact = client.contacts().find(
+    ContactFindRequest.builder()
+        .email("neil.armstrong@moon.space")
+        .build()
+);
+```
+
+Update a contact:
+
+```java
+import com.telos.loops.contacts.ContactUpdateRequest;
+
+client.contacts().update(
+    ContactUpdateRequest.builder()
+        .email("neil.armstrong@moon.space")
+        .firstName("Neil A.")
+        .build()
+);
+```
+
+Delete a contact:
+
+```java
+import com.telos.loops.contacts.ContactDeleteRequest;
+
+client.contacts().delete(
+    ContactDeleteRequest.builder()
+        .email("neil.armstrong@moon.space")
+        .build()
+);
+```
+
+### Events
+
+Send an event to trigger a loop:
+
+```java
+import com.telos.loops.events.EventSendRequest;
+
+client.events().send(
+    EventSendRequest.builder()
+        .email("neil.armstrong@moon.space")
+        .eventName("joinedMission")
+        .putEventProperty("mission", "Apollo 11")
+        .build()
+);
+```
+
+### Transactional Emails
+
+Send a transactional email using a pre-defined ID:
+
+```java
+import com.telos.loops.transactional.TransactionalSendRequest;
+
+client.transactional().send(
+    TransactionalSendRequest.builder()
+        .transactionalId("cm...")
+        .email("recipient@example.com")
+        .putDataVariable("name", "Recipient Name")
+        .build()
+);
+```
+
 
 ## Development
 

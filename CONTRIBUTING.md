@@ -32,8 +32,20 @@ Please communicate with respect and professionalism.
 2. Open a **Pull Request** against `main`.
 3. Ensure CI checks pass.
 
-## Reporting Issues
-Please include:
-- SDK version
-- Reproduction steps or code snippet
-- Expected vs actual behavior
+## Releasing
+
+Releases are automated via GitHub Actions when a new tag is pushed.
+
+1.  **Draft a New Release**: On GitHub, draft a new release.
+2.  **Create Tag**: Use semver (e.g., `v1.0.0`).
+3.  **Publish**: Publishing the release will trigger the workflow to build, sign, and deploy to Maven Central.
+
+### Required Secrets
+
+The following secrets must be configured in the repository settings for deployment to succeed:
+
+-   `GPG_PRIVATE_KEY`: ASCII-armored private key for signing artifacts.
+-   `GPG_PASSPHRASE`: Passphrase for the GPG key.
+-   `CENTRAL_TOKEN_USERNAME`: User token for Maven Central (Sonatype).
+-   `CENTRAL_TOKEN_PASSWORD`: Password token for Maven Central.
+-   `CODECOV_TOKEN`: Token for Codecov upload (optional but recommended for coverage badge).
