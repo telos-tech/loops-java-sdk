@@ -8,27 +8,33 @@ import java.util.regex.Pattern;
 /**
  * Request to create a new custom contact property in Loops.
  *
- * <p>Custom properties must be defined before they can be used on contacts. The property name must
- * be in camelCase format, and the type must be one of: "string", "number", "boolean", or "date".
+ * <p>
+ * Custom properties must be defined before they can be used on contacts. The
+ * property name must
+ * be in camelCase format, and the type must be one of: "string", "number",
+ * "boolean", or "date".
  *
- * <p>Example usage:
+ * <p>
+ * Example usage:
  *
  * <pre>{@code
  * ContactPropertyCreateRequest request = new ContactPropertyCreateRequest(
- *     "planName",  // name (must be camelCase)
- *     "string"     // type (string, number, boolean, or date)
+ *     "planName", // name (must be camelCase)
+ *     "string" // type (string, number, boolean, or date)
  * );
  * }</pre>
  *
- * @param name the property name in camelCase format (e.g., "planName", "signupDate")
+ * @param name the property name in camelCase format (e.g., "planName",
+ *             "signupDate")
  * @param type the data type: "string", "number", "boolean", or "date"
- * @throws LoopsValidationException if name is not in camelCase format or type is invalid
+ * @throws LoopsValidationException if name is not in camelCase format or type
+ *                                  is invalid
  */
 @JsonIgnoreProperties(ignoreUnknown = false)
 public record ContactPropertyCreateRequest(@Nonnull String name, @Nonnull String type) {
 
   private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("^[a-z][a-zA-Z0-9]*$");
-  private static final String[] VALID_TYPES = {"string", "number", "boolean", "date"};
+  private static final String[] VALID_TYPES = { "string", "number", "boolean", "date" };
 
   public ContactPropertyCreateRequest {
     // Validate name is camelCase
@@ -54,6 +60,57 @@ public record ContactPropertyCreateRequest(@Nonnull String name, @Nonnull String
     if (!validType) {
       throw new LoopsValidationException(
           "type must be one of: string, number, boolean, date. Got: " + type);
+    }
+  }
+
+  /**
+   * Creates a new builder for {@link ContactPropertyCreateRequest}.
+   *
+   * @return a new builder
+   */
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /** Builder for {@link ContactPropertyCreateRequest}. */
+  public static final class Builder {
+    private String name;
+    private String type;
+
+    private Builder() {
+    }
+
+    /**
+     * Sets the property name.
+     *
+     * @param name the property name in camelCase format (e.g., "planName",
+     *             "signupDate")
+     * @return this builder
+     */
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    /**
+     * Sets the data type.
+     *
+     * @param type the data type: "string", "number", "boolean", or "date"
+     * @return this builder
+     */
+    public Builder type(String type) {
+      this.type = type;
+      return this;
+    }
+
+    /**
+     * Builds the {@link ContactPropertyCreateRequest}.
+     *
+     * @return the new request
+     * @throws LoopsValidationException if validation fails
+     */
+    public ContactPropertyCreateRequest build() {
+      return new ContactPropertyCreateRequest(name, type);
     }
   }
 }
