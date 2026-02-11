@@ -6,10 +6,13 @@ import java.util.Map;
 /**
  * Optional request configuration for API calls.
  *
- * <p>Allows you to customize individual API requests by providing additional HTTP headers. Use
+ * <p>
+ * Allows you to customize individual API requests by providing additional HTTP
+ * headers. Use
  * {@link #none()} for default behavior with no custom headers.
  *
- * <p>Example usage:
+ * <p>
+ * Example usage:
  *
  * <pre>{@code
  * // No custom options
@@ -17,11 +20,11 @@ import java.util.Map;
  *
  * // With custom headers
  * RequestOptions options = new RequestOptions(
- *     Map.of("X-Custom-Header", "value")
- * );
+ *     Map.of("X-Custom-Header", "value"));
  * }</pre>
  *
- * @param headers additional HTTP headers to include in the request (immutable copy is created)
+ * @param headers additional HTTP headers to include in the request (immutable
+ *                copy is created)
  */
 public record RequestOptions(Map<String, String> headers) {
 
@@ -36,5 +39,39 @@ public record RequestOptions(Map<String, String> headers) {
    */
   public static RequestOptions none() {
     return new RequestOptions(Collections.emptyMap());
+  }
+
+  /**
+   * Creates a new builder for {@link RequestOptions}.
+   *
+   * @return a new builder
+   */
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /** Builder for {@link RequestOptions}. */
+  public static final class Builder {
+    private java.util.Map<String, String> headers;
+
+    private Builder() {
+    }
+
+    public Builder headers(Map<String, String> headers) {
+      this.headers = headers;
+      return this;
+    }
+
+    public Builder addHeader(String key, String value) {
+      if (this.headers == null) {
+        this.headers = new java.util.HashMap<>();
+      }
+      this.headers.put(key, value);
+      return this;
+    }
+
+    public RequestOptions build() {
+      return new RequestOptions(headers);
+    }
   }
 }
